@@ -71,7 +71,7 @@ public class AsesorExternoController {
 		model.addAttribute("asesorExterno", new AsesorExterno());
 		model.addAttribute("empresas", empresaService.buscarTodasEmp());
 		model.addAttribute("usuariosDisponibles", obtenerUsuariosAsesorExternoDisponibles(null));
-		return "asesorExterno/formAsesorExterno";
+		return "fragmento/formAsesorExterno";
 	}
 
 	@PostMapping("/guardar")
@@ -142,7 +142,7 @@ public class AsesorExternoController {
 		model.addAttribute("asesorExterno", asesorExterno);
 		model.addAttribute("empresas", empresaService.buscarTodasEmp());
 		model.addAttribute("usuariosDisponibles", obtenerUsuariosAsesorExternoDisponibles(asesorExterno));
-		return "asesorExterno/formAsesorExterno";
+		return "fragmento/formAsesorExterno";
 	}
 
 	@GetMapping("/eliminar/{id}")
