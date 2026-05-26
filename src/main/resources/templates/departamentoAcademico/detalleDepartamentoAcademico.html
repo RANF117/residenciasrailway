@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalle departamento académico</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+      <div>
+        <h1>Sistema de Residencias Profesionales</h1>
+        <p>Detalle de departamento académico</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+    <main class="main">
+      <div class="card">
+        <h2>Detalle de departamento académico</h2>
+
+        <p><strong>ID:</strong> <span th:text="${departamentoAcademico.idDepartamentoAcademico}"></span></p>
+        <p><strong>Nombre:</strong> <span th:text="${departamentoAcademico.nombre}"></span></p>
+
+        <div class="actions">
+          <a class="btn secondary" th:href="@{/departamentoAcademico/mostrarDepartamentosAcademicos}">Regresar</a>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

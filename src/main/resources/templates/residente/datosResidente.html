@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Residentes</title>
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+	<header class="header">
+		<div class="header-content">
+			<img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+			<div>
+				<h1>Sistema de Residencias Profesionales</h1>
+				<p>Catálogo de residentes</p>
+			</div>
+		</div>
+	</header>
+
+	<div class="layout">
+		<aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+		<main class="main">
+			<div class="card">
+				<div th:if="${msg}" class="alert-success">
+					<span th:text="${msg}"></span>
+				</div>
+
+				<div class="actions">
+					<a class="btn" th:href="@{/residente/formulario}"> <i
+						class="bi bi-plus-circle"></i> Nuevo residente
+					</a> <a class="btn light" th:href="@{/residente/estatusResidentes}">
+						<i class="bi bi-arrow-repeat"></i> Administrar estatus
+					</a>
+				</div>
+
+				<h2>Residentes activos</h2>
+
+				<form th:action="@{/residente/mostrarResidentes}" method="get"
+					class="grid" style="margin-bottom: 20px;">
+					<div class="field">
+						<label>Buscar por nombre</label> <input type="text" name="nombre"
+							pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$"
+							title="Por favor, ingrese solo letras" th:value="${nombre}">
+					</div>
+
+					<div class="field">
+						<label>Buscar por proyecto</label> <select name="filtroProyecto">
+							<option value=""
+								th:selected="${filtroProyecto == null || filtroProyecto == ''}">
+								Todos los residentes activos</option>
+
+							<option value="CON_PROYECTO"
+								th:selected="${filtroProyecto == 'CON_PROYECTO'}">Con proyecto</option>
+
+							<option value="SIN_PROYECTO"
+								th:selected="${filtroProyecto == 'SIN_PROYECTO'}">Sin proyecto</option>
+						</select>
+					</div>
+
+					<div class="actions" style="grid-column: 1/-1;">
+						<button type="submit">Buscar</button>
+						<a class="btn secondary" th:href="@{/residente/mostrarResidentes}">Limpiar</a>
+					</div>
+				</form>
+
+				<table>
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Foto</th>
+							<th>Nombre</th>
+							<th>No. Control</th>
+							<th>Carrera</th>
+							<th>Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="r : ${residente}">
+							<td th:text="${r.idResidente}"></td>
+							<td><img th:if="${r.foto == 'noFoto.jpeg'}"
+								th:src="@{/img/noFoto.jpeg}" width="60"
+								style="border-radius: 8px;"> <img
+								th:if="${r.foto != 'noFoto.jpeg'}"
+								th:src="@{/residencias/residentes/{img}(img=${r.foto})}"
+								width="60" style="border-radius: 8px;"></td>
+							<td
+								th:text="${r.nombre + ' ' + r.apellidoPaterno + ' ' + r.apellidoMaterno}"></td>
+							<td th:text="${r.numeroControl}"></td>
+							<td th:text="${r.carrera != null ? r.carrera.nombre : ''}"></td>
+							<td><a class="btn secondary"
+								th:href="@{/residente/ver/{id}(id=${r.idResidente})}"> <i
+									class="bi bi-eye"></i>
+							</a> <a class="btn light"
+								th:href="@{/residente/editar/{id}(id=${r.idResidente})}"> <i
+									class="bi bi-pencil-square"></i>
+							</a> <a class="btn danger"
+								th:href="@{/residente/eliminar/{id}(id=${r.idResidente})}"
+								onclick="return confirm('¿Desea desactivar este residente?')">
+									<i class="bi bi-trash"></i>
+							</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</main>
+	</div>
+</body>
+</html>

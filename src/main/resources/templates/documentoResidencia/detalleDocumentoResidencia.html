@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalle documento de residencia</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="header">
+  <div class="header-content">
+    <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+    <div>
+      <h1>Sistema de Residencias Profesionales</h1>
+      <p>Detalle del documento de residencia</p>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+  <main class="main">
+    <div class="card">
+      <h2>Detalle del documento de residencia</h2>
+
+      <p><strong>ID:</strong> <span th:text="${documentoResidencia.idDocumentoResidencia}"></span></p>
+      <p><strong>Proyecto:</strong> <span th:text="${documentoResidencia.proyectoResidencia != null ? documentoResidencia.proyectoResidencia.nombreProyecto : ''}"></span></p>
+      <p><strong>Tipo de documento:</strong> <span th:text="${documentoResidencia.tipoDocumento}"></span></p>
+      <p><strong>Archivo:</strong> <span th:text="${documentoResidencia.nombreArchivo}"></span></p>
+      <p><strong>Fecha de carga:</strong> <span th:text="${#dates.format(documentoResidencia.fechaCarga, 'dd-MM-yyyy')}"></span></p>
+      <p><strong>Observaciones:</strong> <span th:text="${documentoResidencia.observaciones}"></span></p>
+
+      <div class="actions">
+        <a class="btn secondary" th:href="@{/documentoResidencia/mostrarDocumentos}">Regresar</a>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Revisión de propuestas</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+      <div>
+        <h1>Sistema de Residencias Profesionales</h1>
+        <p>Revisión de propuestas de proyecto</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+    <main class="main">
+      <div class="card">
+
+        <div th:if="${msg}" class="alert-success">
+          <span th:text="${msg}"></span>
+        </div>
+
+        <h2>Propuestas para revisión</h2>
+
+        <form th:action="@{/propuestaProyecto/revisar}" method="get" class="grid" style="margin-bottom: 20px;">
+          <div class="field">
+            <label>Filtrar por estado</label>
+            <select name="estadoRevision">
+              <option value="">Todos</option>
+              <option value="PENDIENTE" th:selected="${estadoRevision == 'PENDIENTE'}">PENDIENTE</option>
+              <option value="APROBADA" th:selected="${estadoRevision == 'APROBADA'}">APROBADA</option>
+              <option value="CONDICIONADA" th:selected="${estadoRevision == 'CONDICIONADA'}">CONDICIONADA</option>
+              <option value="RECHAZADA" th:selected="${estadoRevision == 'RECHAZADA'}">RECHAZADA</option>
+            </select>
+          </div>
+
+          <div class="actions" style="grid-column:1 / -1;">
+            <button type="submit">Buscar</button>
+            <a class="btn secondary" th:href="@{/propuestaProyecto/revisar}">Limpiar</a>
+          </div>
+        </form>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Proyecto</th>
+              <th>Residente</th>
+              <th>Periodo</th>
+              <th>Estado</th>
+              <th>Revisión</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="p : ${propuestaProyecto}">
+              <td th:text="${p.idPropuestaProyecto}"></td>
+              <td th:text="${p.nombreProyecto}"></td>
+              <td th:text="${p.residente != null ? p.residente.nombre + ' ' + p.residente.apellidoPaterno : ''}"></td>
+              <td th:text="${p.periodo}"></td>
+              <td th:text="${p.estadoRevision}"></td>
+              <td>
+                <a class="btn secondary" th:href="@{/propuestaProyecto/ver/{id}(id=${p.idPropuestaProyecto})}">
+                  <i class="bi bi-eye"></i>
+                </a>
+                <a class="btn light" th:href="@{/propuestaProyecto/dictaminar/{id}(id=${p.idPropuestaProyecto})}">
+                  Dictaminar
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Evaluación reporte final</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+<header class="header">
+  <div class="header-content">
+    <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+    <div>
+      <h1>Sistema de Residencias Profesionales</h1>
+      <p>Evaluación del reporte final</p>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+  <main class="main">
+    <div class="card">
+      <h2>Formulario de evaluación del reporte final</h2>
+
+      <form th:action="@{/evaluacionReporteFinal/guardar}" th:object="${evaluacionReporteFinalObj}" method="post">
+        <input type="hidden" th:field="*{idEvaluacionReporteFinal}">
+        <input type="hidden" th:field="*{estatus}">
+
+        <div class="grid">
+          <div class="field">
+            <label>Proyecto de residencia</label>
+            <select th:field="*{proyectoResidencia.idProyectoResidencia}">
+              <option value="">Seleccione un proyecto</option>
+              <option th:each="p : ${proyectosResidencia}" th:value="${p.idProyectoResidencia}" th:text="${p.nombreProyecto}"></option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Fecha de evaluación</label>
+            <input type="date" th:field="*{fechaEvaluacion}">
+          </div>
+        </div>
+
+        <div th:if="${mostrarExterno}" class="card" style="margin-top:20px;">
+          <h3>Evaluación del asesor externo</h3>
+          <table>
+            <thead><tr><th>Criterio</th><th>Valor</th><th>Evaluación</th></tr></thead>
+            <tbody>
+              <tr><td>Portada</td><td>2</td><td><select th:field="*{externoPortada}" class="calc-externo"><option th:each="n : ${#numbers.sequence(0,2)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Agradecimientos</td><td>2</td><td><select th:field="*{externoAgradecimientos}" class="calc-externo"><option th:each="n : ${#numbers.sequence(0,2)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Resumen</td><td>2</td><td><select th:field="*{externoResumen}" class="calc-externo"><option th:each="n : ${#numbers.sequence(0,2)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Índice</td><td>2</td><td><select th:field="*{externoIndice}" class="calc-externo"><option th:each="n : ${#numbers.sequence(0,2)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Introducción</td><td>2</td><td><select th:field="*{externoIntroduccion}" class="calc-externo"><option th:each="n : ${#numbers.sequence(0,2)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Problemas a resolver</td><td>5</td><td><select th:field="*{externoProblemas}" class="calc-externo"><option th:each="n : ${#numbers.sequence(0,5)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Objetivos</td><td>5</td><td><select th:field="*{externoObjetivos}" class="calc-externo"><option th:each="n : ${#numbers.sequence(0,5)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Marco teórico</td><td>10</td><td><select th:field="*{externoMarcoTeorico}" class="calc-externo"><option th:each="n : ${#numbers.sequence(0,10)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Procedimiento y actividades</td><td>5</td><td><select th:field="*{externoProcedimiento}" class="calc-externo"><option th:each="n : ${#numbers.sequence(0,5)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Resultados</td><td>45</td><td><select th:field="*{externoResultados}" class="calc-externo"><option th:each="n : ${#numbers.sequence(0,45)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Conclusiones y experiencia</td><td>15</td><td><select th:field="*{externoConclusiones}" class="calc-externo"><option th:each="n : ${#numbers.sequence(0,15)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Competencias desarrolladas</td><td>3</td><td><select th:field="*{externoCompetencias}" class="calc-externo"><option th:each="n : ${#numbers.sequence(0,3)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Fuentes de información</td><td>2</td><td><select th:field="*{externoFuentes}" class="calc-externo"><option th:each="n : ${#numbers.sequence(0,2)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+            </tbody>
+          </table>
+          <div class="grid" style="margin-top:15px;">
+            <div class="field">
+              <label>Total externo</label>
+              <input type="text" id="totalExternoVisible" th:field="*{calificacionAsesorExterno}" readonly>
+            </div>
+            <div class="field" style="grid-column:1 / -1;">
+              <label>Observaciones asesor externo</label>
+              <textarea th:field="*{observacionesExterno}" rows="4"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div th:if="${mostrarInterno}" class="card" style="margin-top:20px;">
+          <h3>Evaluación del asesor interno</h3>
+          <table>
+            <thead><tr><th>Criterio</th><th>Valor</th><th>Evaluación</th></tr></thead>
+            <tbody>
+              <tr><td>Portada</td><td>2</td><td><select th:field="*{internoPortada}" class="calc-interno"><option th:each="n : ${#numbers.sequence(0,2)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Agradecimientos</td><td>2</td><td><select th:field="*{internoAgradecimientos}" class="calc-interno"><option th:each="n : ${#numbers.sequence(0,2)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Resumen</td><td>2</td><td><select th:field="*{internoResumen}" class="calc-interno"><option th:each="n : ${#numbers.sequence(0,2)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Índice</td><td>2</td><td><select th:field="*{internoIndice}" class="calc-interno"><option th:each="n : ${#numbers.sequence(0,2)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Introducción</td><td>2</td><td><select th:field="*{internoIntroduccion}" class="calc-interno"><option th:each="n : ${#numbers.sequence(0,2)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Problemas a resolver</td><td>5</td><td><select th:field="*{internoProblemas}" class="calc-interno"><option th:each="n : ${#numbers.sequence(0,5)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Objetivos</td><td>5</td><td><select th:field="*{internoObjetivos}" class="calc-interno"><option th:each="n : ${#numbers.sequence(0,5)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Marco teórico</td><td>10</td><td><select th:field="*{internoMarcoTeorico}" class="calc-interno"><option th:each="n : ${#numbers.sequence(0,10)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Procedimiento y actividades</td><td>5</td><td><select th:field="*{internoProcedimiento}" class="calc-interno"><option th:each="n : ${#numbers.sequence(0,5)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Resultados</td><td>45</td><td><select th:field="*{internoResultados}" class="calc-interno"><option th:each="n : ${#numbers.sequence(0,45)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Conclusiones y experiencia</td><td>15</td><td><select th:field="*{internoConclusiones}" class="calc-interno"><option th:each="n : ${#numbers.sequence(0,15)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Competencias desarrolladas</td><td>3</td><td><select th:field="*{internoCompetencias}" class="calc-interno"><option th:each="n : ${#numbers.sequence(0,3)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+              <tr><td>Fuentes de información</td><td>2</td><td><select th:field="*{internoFuentes}" class="calc-interno"><option th:each="n : ${#numbers.sequence(0,2)}" th:value="${n}" th:text="${n}"></option></select></td></tr>
+            </tbody>
+          </table>
+          <div class="grid" style="margin-top:15px;">
+            <div class="field">
+              <label>Total interno</label>
+              <input type="text" id="totalInternoVisible" th:field="*{calificacionAsesorInterno}" readonly>
+            </div>
+            <div class="field" style="grid-column:1 / -1;">
+              <label>Observaciones asesor interno</label>
+              <textarea th:field="*{observacionesInterno}" rows="4"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:20px;">
+          <div class="grid">
+            <div class="field">
+              <label>Promedio del reporte final</label>
+              <input type="text" id="calificacionFinalVisible" th:field="*{calificacionFinalReporte}" readonly>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions" style="margin-top:20px;">
+          <button type="submit">Guardar evaluación</button>
+          <a class="btn secondary" th:href="@{/evaluacionReporteFinal/mostrar}">Cancelar</a>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const totalInternoVisible = document.getElementById("totalInternoVisible");
+  const totalExternoVisible = document.getElementById("totalExternoVisible");
+  const calificacionFinalVisible = document.getElementById("calificacionFinalVisible");
+
+  function sumarSelects(selector) {
+    let total = 0;
+    document.querySelectorAll(selector).forEach(s => {
+      const valor = parseFloat(s.value);
+      if (!isNaN(valor)) total += valor;
+    });
+    return total;
+  }
+
+  function actualizarTotales() {
+    if (totalInternoVisible) totalInternoVisible.value = sumarSelects(".calc-interno").toFixed(2);
+    if (totalExternoVisible) totalExternoVisible.value = sumarSelects(".calc-externo").toFixed(2);
+
+    const interno = totalInternoVisible ? parseFloat(totalInternoVisible.value) : NaN;
+    const externo = totalExternoVisible ? parseFloat(totalExternoVisible.value) : NaN;
+
+    if (!isNaN(interno) && !isNaN(externo)) {
+      calificacionFinalVisible.value = ((interno + externo) / 2).toFixed(2);
+    } else if (!isNaN(interno)) {
+      calificacionFinalVisible.value = interno.toFixed(2);
+    } else if (!isNaN(externo)) {
+      calificacionFinalVisible.value = externo.toFixed(2);
+    } else {
+      calificacionFinalVisible.value = "";
+    }
+  }
+
+  document.querySelectorAll(".calc-interno, .calc-externo").forEach(s => {
+    s.addEventListener("change", actualizarTotales);
+  });
+
+  actualizarTotales();
+});
+</script>
+</body>
+</html>

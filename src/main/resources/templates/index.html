@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inicio | Sistema de Residencias Profesionales</title>
+
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="header-content">
+      <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+      <div>
+        <h1>Sistema de Residencias Profesionales</h1>
+        <p>Instituto Tecnológico de Chilpancingo</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout" style="display: block;">
+    <main class="main" style="max-width: 1200px; margin: 0 auto;">
+      <div class="card">
+        <h2 style="text-align: center;">Bienvenido al Sistema de Residencias Profesionales</h2>
+
+        <p style="text-align: center; max-width: 800px; margin: 0 auto 10px auto;">
+          Desde esta página pública puedes consultar el banco de proyectos disponibles.
+        </p>
+
+        <h4 style="text-align: center; margin-bottom: 30px;">
+          Para acceder a los módulos administrativos del sistema, es necesario iniciar sesión.
+        </h4>
+
+        <div class="module-grid" style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap;">
+
+          <div class="module-card" style="max-width: 380px; width: 100%;">
+            <div class="module-icon">
+              <i class="bi bi-kanban"></i>
+            </div>
+
+            <h3>Banco de proyectos</h3>
+
+            <p>
+              Consulta los proyectos disponibles para residencia profesional registrados
+              por el área correspondiente.
+            </p>
+
+            <div class="actions">
+              <a class="btn" th:href="@{/proyectoBanco/publico}">
+                Ver proyectos disponibles
+              </a>
+            </div>
+          </div>
+
+          <div class="module-card" style="max-width: 380px; width: 100%;">
+            <div class="module-icon">
+              <i class="bi bi-person-lock"></i>
+            </div>
+
+            <h3>Acceso al sistema</h3>
+
+            <p>
+              Inicia sesión para acceder a los módulos del sistema, como residentes,
+              asesores, empresas, proyectos de residencia y reportes.
+            </p>
+
+            <div class="actions">
+              <a class="btn secondary" th:href="@{/login}">
+                Iniciar sesión
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <footer class="footer">
+  </footer>
+
+</body>
+</html>

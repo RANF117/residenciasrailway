@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Documentos de residencia</title>
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+	<header class="header">
+		<div class="header-content">
+			<img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+			<div>
+				<h1>Sistema de Residencias Profesionales</h1>
+				<p>Documentos de residencia</p>
+			</div>
+		</div>
+	</header>
+
+	<div class="layout">
+		<aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+		<main class="main">
+			<div class="card">
+				<div th:if="${msg}" class="alert-success">
+					<span th:text="${msg}"></span>
+				</div>
+
+				<div class="actions">
+					<a class="btn"
+					   sec:authorize="hasRole('RESIDENTE')"
+					   th:href="@{/documentoResidencia/formulario}">
+						<i class="bi bi-plus-circle"></i> Nuevo documento
+					</a>
+
+					<a class="btn light"
+					   sec:authorize="hasRole('JEFE_DIVISION')"
+					   th:href="@{/documentoResidencia/estatusDocumentos}">
+						<i class="bi bi-arrow-repeat"></i> Administrar estatus
+					</a>
+				</div>
+
+				<h2>Documentos activos</h2>
+
+				<form th:action="@{/documentoResidencia/mostrarDocumentos}"
+					method="get" class="grid" style="margin-bottom: 20px;">
+					<div class="field">
+						<label>Filtrar por tipo</label>
+						<select name="tipoDocumento">
+							<option value="">Todos</option>
+							<option value="PROYECTO_RESIDENCIA"
+								th:selected="${tipoDocumento == 'PROYECTO_RESIDENCIA'}">PROYECTO_RESIDENCIA</option>
+							<option value="REPORTE_PRELIMINAR"
+								th:selected="${tipoDocumento == 'REPORTE_PRELIMINAR'}">REPORTE_PRELIMINAR</option>
+							<option value="CARTA_ACEPTACION"
+								th:selected="${tipoDocumento == 'CARTA_ACEPTACION'}">CARTA_ACEPTACION</option>
+							<option value="SEGUIMIENTO_1"
+								th:selected="${tipoDocumento == 'SEGUIMIENTO_1'}">SEGUIMIENTO_1</option>
+							<option value="SEGUIMIENTO_2"
+								th:selected="${tipoDocumento == 'SEGUIMIENTO_2'}">SEGUIMIENTO_2</option>
+							<option value="REPORTE_FINAL"
+								th:selected="${tipoDocumento == 'REPORTE_FINAL'}">REPORTE_FINAL</option>
+							<option value="CARTA_TERMINACION"
+								th:selected="${tipoDocumento == 'CARTA_TERMINACION'}">CARTA_TERMINACION</option>
+							<option value="LIBERACION"
+								th:selected="${tipoDocumento == 'LIBERACION'}">LIBERACION</option>
+							<option value="OTRO"
+								th:selected="${tipoDocumento == 'OTRO'}">OTRO</option>
+						</select>
+					</div>
+
+					<div class="actions" style="grid-column: 1/-1;">
+						<button type="submit">Buscar</button>
+						<a class="btn secondary"
+							th:href="@{/documentoResidencia/mostrarDocumentos}">Limpiar</a>
+					</div>
+				</form>
+
+				<table>
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Proyecto</th>
+							<th>Tipo</th>
+							<th>Archivo</th>
+							<th>Fecha</th>
+							<th>Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="d : ${documentoResidencia}">
+							<td th:text="${d.idDocumentoResidencia}"></td>
+
+							<td th:text="${d.proyectoResidencia != null ? d.proyectoResidencia.nombreProyecto : ''}"></td>
+
+							<td th:text="${d.tipoDocumento}"></td>
+
+							<td>
+								<a class="btn secondary"
+								   th:if="${d.rutaArchivo != null and !#strings.isEmpty(d.rutaArchivo)}"
+								   th:href="@{/documentoResidencia/archivo/{id}(id=${d.idDocumentoResidencia})}"
+								   target="_blank">
+									<i class="bi bi-file-earmark-pdf"></i> Ver PDF
+								</a>
+
+								<span th:if="${d.rutaArchivo == null or #strings.isEmpty(d.rutaArchivo)}">
+									Sin documento
+								</span>
+							</td>
+
+							<td th:text="${#dates.format(d.fechaCarga, 'dd-MM-yyyy')}"></td>
+
+							<td>
+								<a class="btn secondary"
+								   th:href="@{/documentoResidencia/ver/{id}(id=${d.idDocumentoResidencia})}">
+									<i class="bi bi-eye"></i>
+								</a>
+
+								<a class="btn light"
+								   sec:authorize="hasRole('RESIDENTE')"
+								   th:href="@{/documentoResidencia/editar/{id}(id=${d.idDocumentoResidencia})}">
+									<i class="bi bi-pencil-square"></i>
+								</a>
+
+								<a class="btn danger"
+								   sec:authorize="hasRole('RESIDENTE')"
+								   th:href="@{/documentoResidencia/eliminar/{id}(id=${d.idDocumentoResidencia})}"
+								   onclick="return confirm('¿Desea desactivar este documento?')">
+									<i class="bi bi-trash"></i>
+								</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</main>
+	</div>
+</body>
+</html>

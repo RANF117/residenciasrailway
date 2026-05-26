@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banco de proyectos | Sistema de Residencias Profesionales</title>
+
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body>
+
+<header class="header">
+  <div class="header-content">
+    <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+    <div>
+      <h1>Sistema de Residencias Profesionales</h1>
+      <p>Banco público de proyectos</p>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="aside-login">
+      <a class="btn" th:href="@{/login}">
+        <i class="bi bi-box-arrow-in-right"></i>
+        Iniciar sesión
+      </a>
+    </div>
+
+    <nav class="aside-menu">
+      <a th:href="@{/}">
+        <i class="bi bi-house-door"></i>
+        Inicio
+      </a>
+
+      <a th:href="@{/proyectoBanco/publico}">
+        <i class="bi bi-kanban"></i>
+        Banco de proyectos
+      </a>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <div class="card">
+      <h2>Proyectos disponibles para residencia profesional</h2>
+
+      <p>
+        En esta sección se muestran los proyectos activos disponibles dentro del banco de proyectos.
+        Esta consulta es pública y permite revisar las opciones antes de iniciar el proceso formal de residencia.
+      </p>
+
+      <form th:action="@{/proyectoBanco/publico}" method="get" class="grid" style="margin-bottom: 20px;">
+        <div class="field">
+          <label>Buscar por nombre del proyecto</label>
+          <input type="text" name="nombreProyecto" th:value="${nombreProyecto}">
+        </div>
+
+        <div class="actions" style="grid-column:1 / -1;">
+          <button type="submit">
+            <i class="bi bi-search"></i>
+            Buscar
+          </button>
+
+          <a class="btn secondary" th:href="@{/proyectoBanco/publico}">
+            Limpiar
+          </a>
+        </div>
+      </form>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Proyecto</th>
+            <th>Carrera</th>
+            <th>Periodo</th>
+            <th>Tipo</th>
+            <th>Objetivo</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr th:each="p : ${proyectosBanco}">
+            <td th:text="${p.nombreProyecto}"></td>
+
+            <td th:text="${p.carrera != null ? p.carrera.nombre : 'Sin carrera'}"></td>
+
+            <td th:text="${p.periodo}"></td>
+
+            <td th:text="${p.tipoProyecto}"></td>
+
+            <td th:text="${p.objetivo}"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p th:if="${#lists.isEmpty(proyectosBanco)}" style="margin-top: 20px;">
+        No se encontraron proyectos disponibles.
+      </p>
+
+    </div>
+  </main>
+
+</div>
+
+<footer class="footer">
+  <div class="footer-content">
+    <p>Sistema de Residencias Profesionales · Instituto Tecnológico de Chilpancingo</p>
+    <p>TecNM Campus Chilpancingo · Consulta pública del banco de proyectos</p>
+  </div>
+</footer>
+
+</body>
+</html>

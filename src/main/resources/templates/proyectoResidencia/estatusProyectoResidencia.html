@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Estatus proyectos de residencia</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+      <div>
+        <h1>Sistema de Residencias Profesionales</h1>
+        <p>Administración de estatus de proyectos de residencia</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+    <main class="main">
+      <div class="card">
+        <h2>Proyectos activos e inactivos</h2>
+
+        <form th:action="@{/proyectoResidencia/estatusProyectosResidencia}" method="get" class="grid" style="margin-bottom: 20px;">
+          <div class="field">
+            <label>Buscar por nombre</label>
+            <input type="text" name="nombreProyecto" pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$" 
+            title="Por favor, ingrese solo letras" th:value="${nombreProyecto}">
+          </div>
+
+          <div class="field">
+            <label>Buscar por periodo</label>
+            <select name="periodo">
+              <option value="">Todos</option>
+              <option value="ENERO-JUNIO" th:selected="${periodo == 'ENERO-JUNIO'}">ENERO-JUNIO</option>
+              <option value="AGOSTO-DICIEMBRE" th:selected="${periodo == 'AGOSTO-DICIEMBRE'}">AGOSTO-DICIEMBRE</option>
+            </select>
+          </div>
+
+          <div class="actions" style="grid-column:1 / -1;">
+            <button type="submit">Buscar</button>
+            <a class="btn secondary" th:href="@{/proyectoResidencia/estatusProyectosResidencia}">Limpiar</a>
+          </div>
+        </form>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Proyecto</th>
+              <th>Periodo</th>
+              <th>Estatus</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="p : ${proyectoResidencia}">
+              <td th:text="${p.idProyectoResidencia}"></td>
+              <td th:text="${p.nombreProyecto}"></td>
+              <td th:text="${p.periodo}"></td>
+              <td>
+                <span th:if="${p.estatus == 1}">Activo</span>
+                <span th:if="${p.estatus == 0}">Inactivo</span>
+              </td>
+              <td>
+                <a class="btn danger"
+                   th:if="${p.estatus == 1}"
+                   th:href="@{/proyectoResidencia/eliminar/{id}(id=${p.idProyectoResidencia})}">
+                  Desactivar
+                </a>
+
+                <a class="btn"
+                   th:if="${p.estatus == 0}"
+                   th:href="@{/proyectoResidencia/activar/{id}(id=${p.idProyectoResidencia})}">
+                  Activar
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="actions">
+          <a class="btn secondary" th:href="@{/proyectoResidencia/mostrarProyectosResidencia}">Regresar</a>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de seguimiento</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+<header class="header">
+  <div class="header-content">
+    <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+    <div>
+      <h1>Sistema de Residencias Profesionales</h1>
+      <p>Registro de seguimiento de residencia</p>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+  <main class="main">
+    <div class="card">
+      <h2>Formulario de seguimiento</h2>
+
+      <p class="nota-obligatoria">
+        Los campos marcados con <span class="obligatorio">*</span> son obligatorios.
+      </p>
+
+      <form th:action="@{/seguimientoResidencia/guardar}" th:object="${seguimientoResidencia}" method="post" id="formSeguimientoResidencia">
+        <input type="hidden" th:field="*{idSeguimientoResidencia}">
+        <input type="hidden" th:field="*{estatus}">
+        <input type="hidden" th:field="*{calificacionFinal}">
+
+        <div class="grid">
+          <div class="field">
+            <label for="proyectoResidencia">
+              Proyecto de residencia <span class="obligatorio">*</span>
+            </label>
+            <select id="proyectoResidencia" th:field="*{proyectoResidencia.idProyectoResidencia}">
+              <option value="">Seleccione un proyecto</option>
+              <option th:each="p : ${proyectosResidencia}"
+                      th:value="${p.idProyectoResidencia}"
+                      th:text="${p.nombreProyecto}">
+              </option>
+            </select>
+            <small class="error-message" id="errorProyectoResidencia"></small>
+          </div>
+
+          <div class="field">
+            <label for="tipoSeguimiento">
+              Tipo de seguimiento <span class="obligatorio">*</span>
+            </label>
+            <select id="tipoSeguimiento" th:field="*{tipoSeguimiento}">
+              <option value="">Seleccione un tipo</option>
+              <option value="PRIMER_SEGUIMIENTO">PRIMER_SEGUIMIENTO</option>
+              <option value="SEGUNDO_SEGUIMIENTO">SEGUNDO_SEGUIMIENTO</option>
+            </select>
+            <small class="error-message" id="errorTipoSeguimiento"></small>
+          </div>
+
+          <div class="field" style="grid-column:1 / -1;">
+            <label>Documento del seguimiento</label>
+            <div class="actions">
+              <a class="btn secondary" id="btnVerDocumentos" href="#" target="_blank" style="pointer-events:none; opacity:.6;">
+                <i class="bi bi-file-earmark-pdf"></i> Ver documentos del proyecto
+              </a>
+            </div>
+            <small id="infoDocumentoSeguimiento">
+              Seleccione un proyecto y revise si el residente ya cargó el PDF correspondiente al seguimiento antes de capturar la evaluación.
+            </small>
+          </div>
+
+          <div class="field">
+            <label for="fechaEvaluacion">
+              Fecha de evaluación <span class="obligatorio">*</span>
+            </label>
+            <input type="date" id="fechaEvaluacion" th:field="*{fechaEvaluacion}">
+            <small class="error-message" id="errorFechaEvaluacion"></small>
+          </div>
+
+          <div class="field">
+            <label for="calificacionAsesorInterno">
+              Calificación asesor interno <span class="obligatorio">*</span>
+            </label>
+            <input type="number" id="calificacionAsesorInterno" th:field="*{calificacionAsesorInterno}" min="0" max="100" step="0.01">
+            <small class="error-message" id="errorCalificacionAsesorInterno"></small>
+          </div>
+
+          <div class="field">
+            <label for="calificacionAsesorExterno">
+              Calificación asesor externo <span class="obligatorio">*</span>
+            </label>
+            <input type="number" id="calificacionAsesorExterno" th:field="*{calificacionAsesorExterno}" min="0" max="100" step="0.01">
+            <small class="error-message" id="errorCalificacionAsesorExterno"></small>
+          </div>
+
+          <div class="field">
+            <label for="calificacionFinalVisible">Calificación final</label>
+            <input type="text" id="calificacionFinalVisible" readonly>
+          </div>
+
+          <div class="field" style="grid-column:1 / -1;">
+            <label for="observaciones">
+              Observaciones <span class="obligatorio">*</span>
+            </label>
+            <textarea id="observaciones" th:field="*{observaciones}" rows="5"></textarea>
+            <small class="error-message" id="errorObservaciones"></small>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit">Guardar</button>
+          <a class="btn secondary" th:href="@{/seguimientoResidencia/mostrarSeguimientos}">Cancelar</a>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("formSeguimientoResidencia");
+  const proyectoResidencia = document.getElementById("proyectoResidencia");
+  const tipoSeguimiento = document.getElementById("tipoSeguimiento");
+  const fechaEvaluacion = document.getElementById("fechaEvaluacion");
+  const calificacionAsesorInterno = document.getElementById("calificacionAsesorInterno");
+  const calificacionAsesorExterno = document.getElementById("calificacionAsesorExterno");
+  const calificacionFinalVisible = document.getElementById("calificacionFinalVisible");
+  const observaciones = document.getElementById("observaciones");
+  const btnVerDocumentos = document.getElementById("btnVerDocumentos");
+  const infoDocumentoSeguimiento = document.getElementById("infoDocumentoSeguimiento");
+
+  const errorProyectoResidencia = document.getElementById("errorProyectoResidencia");
+  const errorTipoSeguimiento = document.getElementById("errorTipoSeguimiento");
+  const errorFechaEvaluacion = document.getElementById("errorFechaEvaluacion");
+  const errorCalificacionAsesorInterno = document.getElementById("errorCalificacionAsesorInterno");
+  const errorCalificacionAsesorExterno = document.getElementById("errorCalificacionAsesorExterno");
+  const errorObservaciones = document.getElementById("errorObservaciones");
+
+  function validarSelect(input, error, mensaje) {
+    if (input.value === "") {
+      error.textContent = mensaje;
+      input.classList.add("error");
+      return false;
+    }
+    error.textContent = "";
+    input.classList.remove("error");
+    return true;
+  }
+
+  function validarFecha() {
+    if (fechaEvaluacion.value === "") {
+      errorFechaEvaluacion.textContent = "La fecha de evaluación es obligatoria";
+      fechaEvaluacion.classList.add("error");
+      return false;
+    }
+    errorFechaEvaluacion.textContent = "";
+    fechaEvaluacion.classList.remove("error");
+    return true;
+  }
+
+  function validarCalificacion(input, error, mensaje) {
+    const valor = input.value.trim();
+
+    if (valor === "") {
+      error.textContent = mensaje;
+      input.classList.add("error");
+      return false;
+    }
+
+    const numero = Number(valor);
+
+    if (!Number.isFinite(numero)) {
+      error.textContent = "Debe ingresar un número válido";
+      input.classList.add("error");
+      return false;
+    }
+
+    if (numero < 0 || numero > 100) {
+      error.textContent = "La calificación debe estar entre 0 y 100";
+      input.classList.add("error");
+      return false;
+    }
+
+    error.textContent = "";
+    input.classList.remove("error");
+    return true;
+  }
+
+  function validarObservaciones() {
+    if (observaciones.value.trim() === "") {
+      errorObservaciones.textContent = "Las observaciones son obligatorias";
+      observaciones.classList.add("error");
+      return false;
+    }
+    errorObservaciones.textContent = "";
+    observaciones.classList.remove("error");
+    return true;
+  }
+
+  function limpiarCalificacion(input) {
+    let valor = input.value;
+
+    valor = valor.replace(/[^0-9.]/g, "");
+
+    const partes = valor.split(".");
+    if (partes.length > 2) {
+      valor = partes[0] + "." + partes.slice(1).join("");
+    }
+
+    const numero = parseFloat(valor);
+    if (!isNaN(numero) && numero > 100) {
+      valor = "100";
+    }
+
+    input.value = valor;
+  }
+
+  function actualizarPromedio() {
+    const interno = parseFloat(calificacionAsesorInterno.value);
+    const externo = parseFloat(calificacionAsesorExterno.value);
+
+    if (!isNaN(interno) && !isNaN(externo)) {
+      calificacionFinalVisible.value = ((interno + externo) / 2).toFixed(2);
+    } else {
+      calificacionFinalVisible.value = "";
+    }
+  }
+
+  function actualizarLinkDocumentos() {
+    if (proyectoResidencia.value !== "") {
+      btnVerDocumentos.href = "/documentoResidencia/proyecto/" + proyectoResidencia.value
+        + "?volver=seguimiento"
+        + "&idProyectoResidencia=" + encodeURIComponent(proyectoResidencia.value)
+        + "&tipoSeguimiento=" + encodeURIComponent(tipoSeguimiento.value);
+
+      btnVerDocumentos.style.pointerEvents = "auto";
+      btnVerDocumentos.style.opacity = "1";
+
+      if (tipoSeguimiento.value === "PRIMER_SEGUIMIENTO") {
+        infoDocumentoSeguimiento.textContent = "Revise si el residente ya cargó el documento correspondiente a SEGUIMIENTO_1 antes de capturar la evaluación.";
+      } else if (tipoSeguimiento.value === "SEGUNDO_SEGUIMIENTO") {
+        infoDocumentoSeguimiento.textContent = "Revise si el residente ya cargó el documento correspondiente a SEGUIMIENTO_2 antes de capturar la evaluación.";
+      } else {
+        infoDocumentoSeguimiento.textContent = "Revise los documentos del proyecto antes de capturar la evaluación del seguimiento.";
+      }
+    } else {
+      btnVerDocumentos.href = "#";
+      btnVerDocumentos.style.pointerEvents = "none";
+      btnVerDocumentos.style.opacity = ".6";
+      infoDocumentoSeguimiento.textContent = "Seleccione un proyecto y revise si el residente ya cargó el PDF correspondiente al seguimiento antes de capturar la evaluación.";
+    }
+  }
+
+  proyectoResidencia.addEventListener("change", function () {
+    validarSelect(proyectoResidencia, errorProyectoResidencia, "Debe seleccionar un proyecto de residencia");
+    actualizarLinkDocumentos();
+  });
+
+  tipoSeguimiento.addEventListener("change", function () {
+    validarSelect(tipoSeguimiento, errorTipoSeguimiento, "Debe seleccionar un tipo de seguimiento");
+    actualizarLinkDocumentos();
+  });
+
+  fechaEvaluacion.addEventListener("change", validarFecha);
+
+  calificacionAsesorInterno.addEventListener("input", function () {
+    limpiarCalificacion(calificacionAsesorInterno);
+    validarCalificacion(calificacionAsesorInterno, errorCalificacionAsesorInterno, "La calificación del asesor interno es obligatoria");
+    actualizarPromedio();
+  });
+
+  calificacionAsesorExterno.addEventListener("input", function () {
+    limpiarCalificacion(calificacionAsesorExterno);
+    validarCalificacion(calificacionAsesorExterno, errorCalificacionAsesorExterno, "La calificación del asesor externo es obligatoria");
+    actualizarPromedio();
+  });
+
+  observaciones.addEventListener("input", validarObservaciones);
+
+  actualizarPromedio();
+  actualizarLinkDocumentos();
+
+  form.addEventListener("submit", function (e) {
+    const ok1 = validarSelect(proyectoResidencia, errorProyectoResidencia, "Debe seleccionar un proyecto de residencia");
+    const ok2 = validarSelect(tipoSeguimiento, errorTipoSeguimiento, "Debe seleccionar un tipo de seguimiento");
+    const ok3 = validarFecha();
+    const ok4 = validarCalificacion(calificacionAsesorInterno, errorCalificacionAsesorInterno, "La calificación del asesor interno es obligatoria");
+    const ok5 = validarCalificacion(calificacionAsesorExterno, errorCalificacionAsesorExterno, "La calificación del asesor externo es obligatoria");
+    const ok6 = validarObservaciones();
+
+    if (!ok1 || !ok2 || !ok3 || !ok4 || !ok5 || !ok6) {
+      e.preventDefault();
+    }
+  });
+});
+</script>
+</body>
+</html>

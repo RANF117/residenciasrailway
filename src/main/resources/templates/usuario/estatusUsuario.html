@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Estatus usuarios</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="header">
+  <div class="header-content">
+    <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+    <div>
+      <h1>Sistema de Residencias Profesionales</h1>
+      <p>Administración de estatus de usuarios</p>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+  <main class="main">
+    <div class="card">
+      <div th:if="${msg}" class="alert-success">
+        <span th:text="${msg}"></span>
+      </div>
+
+      <h2>Usuarios activos e inactivos</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Rol</th>
+            <th>Estatus</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="u : ${usuarios}">
+            <td th:text="${u.id}"></td>
+            <td th:text="${u.username}"></td>
+            <td th:text="${u.rol != null ? u.rol.nombre : ''}"></td>
+            <td>
+              <span th:if="${u.estatus == 1}">Activo</span>
+              <span th:if="${u.estatus == 0}">Inactivo</span>
+            </td>
+            <td>
+              <a class="btn danger"
+                 th:if="${u.estatus == 1}"
+                 th:href="@{/usuario/eliminar/{id}(id=${u.id})}"
+                 onclick="return confirm('¿Desea desactivar este usuario?')">
+                Desactivar
+              </a>
+
+              <a class="btn"
+                 th:if="${u.estatus == 0}"
+                 th:href="@{/usuario/activar/{id}(id=${u.id})}"
+                 onclick="return confirm('¿Desea activar este usuario?')">
+                Activar
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="actions">
+        <a class="btn secondary" th:href="@{/usuario/mostrarUsuarios}">Regresar</a>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

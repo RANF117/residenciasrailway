@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle dictamen</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+  <header class="header">
+    <h1>Sistema de Residencias Profesionales</h1>
+    <p>Detalle del dictamen</p>
+  </header>
+
+  <div class="layout">
+    <aside th:replace="~{fragmento/fragment :: aside}"> </aside>
+
+    <main class="main">
+      <div class="card">
+        <h2>Información del dictamen</h2>
+
+        <div class="grid">
+          <div class="field">
+            <label>Proyecto</label>
+            <input type="text" th:value="${dictamen.reportePreliminar.proyectoResidencia.nombreProyecto}" readonly>
+          </div>
+
+          <div class="field">
+            <label>Estudiante</label>
+            <input type="text" th:value="${dictamen.reportePreliminar.proyectoResidencia.nombreEstudiante}" readonly>
+          </div>
+
+          <div class="field">
+            <label>Resultado</label>
+            <input type="text" th:value="${dictamen.resultado}" readonly>
+          </div>
+
+          <div class="field">
+            <label>Fecha de dictamen</label>
+            <input type="text" th:value="${dictamen.fechaDictamen}" readonly>
+          </div>
+
+          <div class="field" style="grid-column:1 / -1;">
+            <label>Observaciones</label>
+            <textarea readonly th:text="${dictamen.observaciones}"></textarea>
+          </div>
+        </div>
+
+        <div class="actions">
+          <a class="btn secondary" th:href="@{/dictamenReporte/mostrar}">Regresar</a>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

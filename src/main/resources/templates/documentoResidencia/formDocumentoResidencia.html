@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de documento de residencia</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="header">
+  <div class="header-content">
+    <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+    <div>
+      <h1>Sistema de Residencias Profesionales</h1>
+      <p>Registro de documento de residencia</p>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+  <main class="main">
+    <div class="card">
+      <h2>Formulario de documento de residencia</h2>
+
+      <form th:action="@{/documentoResidencia/guardar}" th:object="${documentoResidencia}" method="post" enctype="multipart/form-data" id="formDocumentoResidencia">
+        <input type="hidden" th:field="*{idDocumentoResidencia}">
+        <input type="hidden" th:field="*{estatus}">
+        <input type="hidden" th:field="*{nombreArchivo}">
+        <input type="hidden" th:field="*{rutaArchivo}">
+
+        <div class="grid">
+          <div class="field">
+            <label>Proyecto de residencia</label>
+            <small class="error-message" id="errorProyectoResidencia"></small>
+            <select id="proyectoResidencia" th:field="*{proyectoResidencia.idProyectoResidencia}">
+              <option value="">Seleccione un proyecto</option>
+              <option th:each="p : ${proyectosResidencia}" th:value="${p.idProyectoResidencia}" th:text="${p.nombreProyecto}"></option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Tipo de documento</label>
+            <small class="error-message" id="errorTipoDocumento"></small>
+            <select id="tipoDocumento" th:field="*{tipoDocumento}">
+              <option value="">Seleccione un tipo</option>
+              <option value="PROYECTO_RESIDENCIA">PROYECTO_RESIDENCIA</option>
+              <option value="REPORTE_PRELIMINAR">REPORTE_PRELIMINAR</option>
+              <option value="CARTA_ACEPTACION">CARTA_ACEPTACION</option>
+              <option value="SEGUIMIENTO_1">SEGUIMIENTO_1</option>
+              <option value="SEGUIMIENTO_2">SEGUIMIENTO_2</option>
+              <option value="REPORTE_FINAL">REPORTE_FINAL</option>
+              <option value="CARTA_TERMINACION">CARTA_TERMINACION</option>
+              <option value="LIBERACION">LIBERACION</option>
+              <option value="OTRO">OTRO</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Fecha de carga</label>
+            <small class="error-message" id="errorFechaCarga"></small>
+            <input type="date" id="fechaCarga" th:field="*{fechaCarga}">
+          </div>
+
+          <div class="field">
+            <label>Archivo PDF</label>
+            <small class="error-message" id="errorArchivo"></small>
+            <input type="file" id="archivo" name="archivo" accept=".pdf">
+          </div>
+
+          <div class="field" style="grid-column:1 / -1;">
+            <label>Observaciones</label>
+            <small class="error-message" id="errorObservaciones"></small>
+            <textarea id="observaciones" th:field="*{observaciones}" rows="4"></textarea>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit">Guardar</button>
+          <a class="btn secondary" th:href="@{/documentoResidencia/mostrarDocumentos}">Cancelar</a>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("formDocumentoResidencia");
+  const proyectoResidencia = document.getElementById("proyectoResidencia");
+  const tipoDocumento = document.getElementById("tipoDocumento");
+  const fechaCarga = document.getElementById("fechaCarga");
+  const archivo = document.getElementById("archivo");
+  const observaciones = document.getElementById("observaciones");
+
+  const errorProyectoResidencia = document.getElementById("errorProyectoResidencia");
+  const errorTipoDocumento = document.getElementById("errorTipoDocumento");
+  const errorFechaCarga = document.getElementById("errorFechaCarga");
+  const errorArchivo = document.getElementById("errorArchivo");
+  const errorObservaciones = document.getElementById("errorObservaciones");
+
+  function validarSelect(input, error, mensaje) {
+    if (input.value === "") {
+      error.textContent = mensaje;
+      input.classList.add("error");
+      return false;
+    }
+    error.textContent = "";
+    input.classList.remove("error");
+    return true;
+  }
+
+  function validarFecha() {
+    if (fechaCarga.value === "") {
+      errorFechaCarga.textContent = "La fecha de carga es obligatoria";
+      fechaCarga.classList.add("error");
+      return false;
+    }
+    errorFechaCarga.textContent = "";
+    fechaCarga.classList.remove("error");
+    return true;
+  }
+
+  function validarArchivo() {
+    if (archivo.value === "") {
+      errorArchivo.textContent = "Debe seleccionar un archivo PDF";
+      archivo.classList.add("error");
+      return false;
+    }
+
+    const nombreArchivo = archivo.value.toLowerCase();
+    if (!(/\.(pdf)$/).test(nombreArchivo)) {
+      errorArchivo.textContent = "El archivo debe ser PDF";
+      archivo.classList.add("error");
+      return false;
+    }
+
+    errorArchivo.textContent = "";
+    archivo.classList.remove("error");
+    return true;
+  }
+
+  function validarObservaciones() {
+    if (observaciones.value.trim() === "") {
+      errorObservaciones.textContent = "Las observaciones son obligatorias";
+      observaciones.classList.add("error");
+      return false;
+    }
+    errorObservaciones.textContent = "";
+    observaciones.classList.remove("error");
+    return true;
+  }
+
+  form.addEventListener("submit", function (e) {
+    const ok1 = validarSelect(proyectoResidencia, errorProyectoResidencia, "Debe seleccionar un proyecto de residencia");
+    const ok2 = validarSelect(tipoDocumento, errorTipoDocumento, "Debe seleccionar un tipo de documento");
+    const ok3 = validarFecha();
+    const ok4 = validarArchivo();
+    const ok5 = validarObservaciones();
+
+    if (!ok1 || !ok2 || !ok3 || !ok4 || !ok5) {
+      e.preventDefault();
+    }
+  });
+});
+</script>
+</body>
+</html>

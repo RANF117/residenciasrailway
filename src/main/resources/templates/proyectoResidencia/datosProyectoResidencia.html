@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Proyectos de residencia</title>
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+	<header class="header">
+		<div class="header-content">
+			<img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+			<div>
+				<h1>Sistema de Residencias Profesionales</h1>
+				<p>Proyectos de residencia formalizados</p>
+			</div>
+		</div>
+	</header>
+
+	<div class="layout">
+		<aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+		<main class="main">
+			<div class="card">
+				<div th:if="${msg}" class="alert-success">
+					<span th:text="${msg}"></span>
+				</div>
+
+				<div class="actions">
+					<a class="btn" th:href="@{/proyectoResidencia/formulario}"> <i
+						class="bi bi-plus-circle"></i> Nuevo proyecto de residencia
+					</a> <a class="btn light"
+						th:href="@{/proyectoResidencia/estatusProyectosResidencia}"> <i
+						class="bi bi-arrow-repeat"></i> Administrar estatus
+					</a>
+				</div>
+
+				<h2>Proyectos de residencia activos</h2>
+
+				<form th:action="@{/proyectoResidencia/mostrarProyectosResidencia}"
+					method="get" class="grid" style="margin-bottom: 20px;">
+					<div class="field">
+						<label>Buscar por nombre</label> <input type="text"
+							name="nombreProyecto" th:value="${nombreProyecto}">
+					</div>
+
+					<div class="field">
+						<label>Buscar por periodo</label> <select name="periodo">
+							<option value="">Todos</option>
+							<option value="ENERO-JUNIO"
+								th:selected="${periodo == 'ENERO-JUNIO'}">ENERO-JUNIO</option>
+							<option value="AGOSTO-DICIEMBRE"
+								th:selected="${periodo == 'AGOSTO-DICIEMBRE'}">AGOSTO-DICIEMBRE</option>
+						</select>
+					</div>
+
+					<div class="actions" style="grid-column: 1/-1;">
+						<button type="submit">Buscar</button>
+						<a class="btn secondary"
+							th:href="@{/proyectoResidencia/mostrarProyectosResidencia}">Limpiar</a>
+					</div>
+				</form>
+
+				<table>
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Proyecto</th>
+							<th>Origen</th>
+							<th>Residente</th>
+							<th>Periodo</th>
+							<th>Etapa</th>
+							<th>Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="p : ${proyectoResidencia}">
+							<td th:text="${p.idProyectoResidencia}"></td>
+							<td th:text="${p.nombreProyecto}"></td>
+							<td th:text="${p.origenProyecto}"></td>
+							<td
+								th:text="${p.residente != null ? p.residente.nombre + ' ' + p.residente.apellidoPaterno : ''}"></td>
+							<td th:text="${p.periodo}"></td>
+							<td th:text="${p.etapaActual}"></td>
+							<td><a class="btn secondary"
+								th:href="@{/proyectoResidencia/ver/{id}(id=${p.idProyectoResidencia})}">
+									<i class="bi bi-eye"></i>
+							</a> <a class="btn light"
+								th:href="@{/proyectoResidencia/editar/{id}(id=${p.idProyectoResidencia})}">
+									<i class="bi bi-pencil-square"></i> <a class="btn"
+									th:href="@{/proyectoResidencia/pdf/{id}(id=${p.idProyectoResidencia})}"
+									target="_blank"> <i class="bi bi-file-earmark-pdf"></i>
+								</a> <a class="btn danger"
+									th:href="@{/proyectoResidencia/eliminar/{id}(id=${p.idProyectoResidencia})}"
+									onclick="return confirm('¿Desea desactivar este proyecto de residencia?')">
+										<i class="bi bi-trash"></i>
+								</a><a class="btn" sec:authorize="hasRole('JEFE_DIVISION')"
+									th:href="@{/proyectoResidencia/calcularFinal/{id}(id=${p.idProyectoResidencia})}">
+										<i class="bi bi-calculator"></i> Calcular final
+								</a> <a class="btn secondary"
+									th:if="${p.calificacionFinalResidencia != null}"
+									th:href="@{/proyectoResidencia/liberacion/{id}(id=${p.idProyectoResidencia})}"
+									target="_blank"> <i class="bi bi-file-earmark-pdf"></i>
+								</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</main>
+	</div>
+</body>
+</html>

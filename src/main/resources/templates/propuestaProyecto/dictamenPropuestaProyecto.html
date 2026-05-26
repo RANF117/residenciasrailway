@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dictamen de propuesta</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+      <div>
+        <h1>Sistema de Residencias Profesionales</h1>
+        <p>Dictamen de propuesta de proyecto</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+    <main class="main">
+      <div class="card">
+        <h2>Dictaminar propuesta</h2>
+
+        <form th:action="@{/propuestaProyecto/guardarDictamen}" th:object="${propuestaProyecto}" method="post" id="formDictamenPropuesta">
+          <input type="hidden" th:field="*{idPropuestaProyecto}">
+
+          <div class="grid">
+            <div class="field" style="grid-column:1 / -1;">
+              <label>Proyecto</label>
+              <input type="text" th:value="*{nombreProyecto}" readonly>
+            </div>
+
+            <div class="field">
+              <label>Estado de revisión</label>
+              <small class="error-message" id="errorEstadoRevision"></small>
+              <select id="estadoRevision" th:field="*{estadoRevision}">
+                <option value="">Seleccione un dictamen</option>
+                <option value="PENDIENTE">PENDIENTE</option>
+                <option value="APROBADA">APROBADA</option>
+                <option value="CONDICIONADA">CONDICIONADA</option>
+                <option value="RECHAZADA">RECHAZADA</option>
+              </select>
+            </div>
+
+            <div class="field" style="grid-column:1 / -1;">
+              <label>Observaciones</label>
+              <small class="error-message" id="errorObservaciones"></small>
+              <textarea id="observacionesRevision" th:field="*{observacionesRevision}" rows="5"></textarea>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="submit">Guardar dictamen</button>
+            <a class="btn secondary" th:href="@{/propuestaProyecto/revisar}">Cancelar</a>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("formDictamenPropuesta");
+      const estadoRevision = document.getElementById("estadoRevision");
+      const observacionesRevision = document.getElementById("observacionesRevision");
+
+      const errorEstadoRevision = document.getElementById("errorEstadoRevision");
+      const errorObservaciones = document.getElementById("errorObservaciones");
+
+      function validarEstadoRevision() {
+        if (estadoRevision.value === "") {
+          errorEstadoRevision.textContent = "Debe seleccionar un dictamen";
+          estadoRevision.classList.add("error");
+          return false;
+        }
+
+        errorEstadoRevision.textContent = "";
+        estadoRevision.classList.remove("error");
+        return true;
+      }
+
+      function validarObservaciones() {
+        const valor = observacionesRevision.value.trim();
+
+        if (valor === "") {
+          errorObservaciones.textContent = "Las observaciones son obligatorias";
+          observacionesRevision.classList.add("error");
+          return false;
+        }
+
+        errorObservaciones.textContent = "";
+        observacionesRevision.classList.remove("error");
+        return true;
+      }
+
+      form.addEventListener("submit", function (e) {
+        const ok1 = validarEstadoRevision();
+        const ok2 = validarObservaciones();
+
+        if (!ok1 || !ok2) {
+          e.preventDefault();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

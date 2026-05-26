@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Formulario asesor externo</title>
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+
+	<header class="header">
+		<div class="header-content">
+			<img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+			<div>
+				<h1>Sistema de Residencias Profesionales</h1>
+				<p>Registro de asesor externo</p>
+			</div>
+		</div>
+	</header>
+
+	<div class="layout">
+		<aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+		<main class="main">
+			<div class="card">
+
+				<h2>Formulario asesor externo</h2>
+
+				<p class="nota-obligatoria">
+					Los campos marcados con <span class="obligatorio">*</span> son
+					obligatorios.
+				</p>
+
+				<form th:action="@{/asesorExterno/guardar}"
+					th:object="${asesorExterno}" method="post"
+					enctype="multipart/form-data" id="formAsesor">
+
+					<input type="hidden" th:field="*{idAsesorExterno}"> <input
+						type="hidden" th:field="*{estatus}"> <input type="hidden"
+						th:field="*{foto}">
+
+					<div class="grid">
+
+						<div class="field">
+							<label for="nombre">Nombre <span class="obligatorio">*</span></label>
+							<input type="text" id="nombre" th:field="*{nombre}">
+						</div>
+
+						<div class="field">
+							<label for="apellidoPaterno">Apellido paterno <span
+								class="obligatorio">*</span></label> <input type="text"
+								id="apellidoPaterno" th:field="*{apellidoPaterno}">
+						</div>
+
+						<div class="field">
+							<label for="apellidoMaterno">Apellido materno <span
+								class="obligatorio">*</span></label> <input type="text"
+								id="apellidoMaterno" th:field="*{apellidoMaterno}">
+						</div>
+
+						<div class="field">
+							<label for="correo">Correo <span class="obligatorio">*</span></label>
+							<input type="text" id="correo" th:field="*{correo}">
+						</div>
+
+						<div class="field">
+							<label for="telefono">Teléfono <span class="obligatorio">*</span></label>
+							<input type="text" id="telefono" th:field="*{telefono}"
+								maxlength="10">
+						</div>
+
+						<div class="field">
+							<label for="puesto">Puesto <span class="obligatorio">*</span></label>
+							<input type="text" id="puesto" th:field="*{puesto}">
+						</div>
+
+						<div class="field">
+							<label for="empresa">Empresa <span class="obligatorio">*</span></label>
+							<select id="empresa" th:field="*{empresa.idEmpresa}">
+								<option value="">Seleccione una empresa</option>
+								<option th:each="e : ${empresas}" th:value="${e.idEmpresa}"
+									th:text="${e.nombre}"></option>
+							</select>
+						</div>
+
+						<div class="field">
+							<label for="usuario">Usuario del sistema <span
+								class="obligatorio">*</span></label> <select id="usuario"
+								th:field="*{usuario.id}">
+								<option value="">Seleccione un usuario</option>
+								<option th:each="u : ${usuariosDisponibles}" th:value="${u.id}"
+									th:text="${u.username}"></option>
+							</select> <small th:if="${#lists.isEmpty(usuariosDisponibles)}"
+								class="error-message"> No hay usuarios disponibles para
+								vincular. </small>
+
+							<div th:if="${#lists.isEmpty(usuariosDisponibles)}"
+								style="margin-top: 10px;">
+								<a class="btn secondary" th:href="@{/usuario/mostrarUsuarios}">
+									Ir a usuarios </a>
+							</div>
+						</div>
+
+						<div class="field">
+							<label for="archivo">Foto</label> <input type="file" id="archivo"
+								name="archivo" accept=".jpg,.jpeg,.png">
+						</div>
+
+					</div>
+
+					<div class="actions">
+						<button type="submit">Guardar</button>
+						<a class="btn secondary"
+							th:href="@{/asesorExterno/mostrarAsesoresExternos}">Cancelar</a>
+					</div>
+
+				</form>
+			</div>
+		</main>
+	</div>
+
+</body>
+</html>

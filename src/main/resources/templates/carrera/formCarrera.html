@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de carrera</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+      <div>
+        <h1>Sistema de Residencias Profesionales</h1>
+        <p>Registro de carrera</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+    <main class="main">
+      <div class="card">
+        <h2>Formulario de carrera</h2>
+
+        <p class="nota-obligatoria">
+          Los campos marcados con <span class="obligatorio">*</span> son obligatorios.
+        </p>
+
+        <form th:action="@{/carrera/guardar}" th:object="${carrera}" method="post" id="formCarrera">
+          <input type="hidden" th:field="*{idCarrera}">
+          <input type="hidden" th:field="*{estatus}">
+
+          <div class="grid">
+            <div class="field">
+              <label for="nombre">
+                Nombre de la carrera <span class="obligatorio">*</span>
+              </label>
+              <input type="text" id="nombre" th:field="*{nombre}">
+              <small class="error-message" id="errorNombre"></small>
+            </div>
+
+            <div class="field">
+              <label for="clave">
+                Clave <span class="obligatorio">*</span>
+              </label>
+              <input type="text" id="clave" th:field="*{clave}">
+              <small class="error-message" id="errorClave"></small>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="submit">Guardar</button>
+            <a class="btn secondary" th:href="@{/carrera/mostrarCarreras}">Cancelar</a>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("formCarrera");
+      const nombre = document.getElementById("nombre");
+      const clave = document.getElementById("clave");
+
+      const errorNombre = document.getElementById("errorNombre");
+      const errorClave = document.getElementById("errorClave");
+
+      function validarNombre() {
+        const valor = nombre.value.trim();
+
+        if (valor === "") {
+          errorNombre.textContent = "El nombre de la carrera es obligatorio";
+          nombre.classList.add("error");
+          return false;
+        }
+
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/.test(valor)) {
+          errorNombre.textContent = "El nombre solo puede contener letras y espacios";
+          nombre.classList.add("error");
+          return false;
+        }
+
+        if (valor.length < 5) {
+          errorNombre.textContent = "El nombre debe tener al menos 5 caracteres";
+          nombre.classList.add("error");
+          return false;
+        }
+
+        if (valor.length > 100) {
+          errorNombre.textContent = "El nombre no debe exceder 100 caracteres";
+          nombre.classList.add("error");
+          return false;
+        }
+
+        errorNombre.textContent = "";
+        nombre.classList.remove("error");
+        return true;
+      }
+
+      function validarClave() {
+        const valor = clave.value.trim();
+
+        if (valor === "") {
+          errorClave.textContent = "La clave es obligatoria";
+          clave.classList.add("error");
+          return false;
+        }
+
+        if (!/^[A-Za-z0-9\-]+$/.test(valor)) {
+          errorClave.textContent = "La clave solo puede contener letras, números y guiones";
+          clave.classList.add("error");
+          return false;
+        }
+
+        if (valor.length < 4) {
+          errorClave.textContent = "La clave debe tener al menos 4 caracteres";
+          clave.classList.add("error");
+          return false;
+        }
+
+        if (valor.length > 30) {
+          errorClave.textContent = "La clave no debe exceder 30 caracteres";
+          clave.classList.add("error");
+          return false;
+        }
+
+        errorClave.textContent = "";
+        clave.classList.remove("error");
+        return true;
+      }
+
+      nombre.addEventListener("input", validarNombre);
+      clave.addEventListener("input", validarClave);
+      nombre.addEventListener("blur", validarNombre);
+      clave.addEventListener("blur", validarClave);
+
+      form.addEventListener("submit", function (e) {
+        const okNombre = validarNombre();
+        const okClave = validarClave();
+
+        if (!okNombre || !okClave) {
+          e.preventDefault();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Usuarios</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+<header class="header">
+  <div class="header-content">
+    <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+    <div>
+      <h1>Sistema de Residencias Profesionales</h1>
+      <p>Gestión de usuarios</p>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+  <main class="main">
+    <div class="card">
+      <div th:if="${msg}" class="alert-success">
+        <span th:text="${msg}"></span>
+      </div>
+
+      <div th:if="${msgError}" class="alert-danger">
+        <span th:text="${msgError}"></span>
+      </div>
+
+      <div class="actions">
+        <a class="btn" th:href="@{/usuario/formulario}">
+          <i class="bi bi-plus-circle"></i> Nuevo usuario
+        </a>
+
+        <a class="btn light" th:href="@{/usuario/estatusUsuarios}">
+          <i class="bi bi-arrow-repeat"></i> Administrar estatus
+        </a>
+      </div>
+
+      <h2>Usuarios activos</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Rol</th>
+            <th>Estatus</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="u : ${usuarios}">
+            <td th:text="${u.id}"></td>
+            <td th:text="${u.username}"></td>
+            <td th:text="${u.rol != null ? u.rol.nombre : ''}"></td>
+            <td>Activo</td>
+            <td>
+              <a class="btn secondary" th:href="@{/usuario/ver/{id}(id=${u.id})}">
+                <i class="bi bi-eye"></i>
+              </a>
+              <a class="btn light" th:href="@{/usuario/editar/{id}(id=${u.id})}">
+                <i class="bi bi-pencil-square"></i>
+              </a>
+              <a class="btn danger" th:href="@{/usuario/eliminar/{id}(id=${u.id})}"
+                 onclick="return confirm('¿Desea desactivar este usuario?')">
+                <i class="bi bi-trash"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+</body>
+</html>

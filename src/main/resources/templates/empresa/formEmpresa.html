@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de empresa</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+      <div>
+        <h1>Sistema de Residencias Profesionales</h1>
+        <p>Registro de empresa</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+    <main class="main">
+      <div class="card">
+        <h2>Formulario de empresa</h2>
+
+        <p class="nota-obligatoria">
+          Los campos marcados con <span class="obligatorio">*</span> son obligatorios.
+        </p>
+
+        <form th:action="@{/empresa/guardar}" th:object="${empresa}" method="post" id="formEmpresa">
+          <input type="hidden" th:field="*{idEmpresa}">
+          <input type="hidden" th:field="*{estatus}">
+
+          <div class="grid">
+            <div class="field">
+              <label for="nombre">
+                Nombre de la empresa <span class="obligatorio">*</span>
+              </label>
+              <input type="text" id="nombre" th:field="*{nombre}">
+              <small class="error-message" id="errorNombre"></small>
+            </div>
+
+            <div class="field">
+              <label for="telefono">
+                Teléfono <span class="obligatorio">*</span>
+              </label>
+              <input type="text" id="telefono" th:field="*{telefono}" maxlength="10">
+              <small class="error-message" id="errorTelefono"></small>
+            </div>
+
+            <div class="field" style="grid-column:1 / -1;">
+              <label for="direccion">
+                Dirección <span class="obligatorio">*</span>
+              </label>
+              <input type="text" id="direccion" th:field="*{direccion}">
+              <small class="error-message" id="errorDireccion"></small>
+            </div>
+
+            <div class="field" style="grid-column:1 / -1;">
+              <label for="correo">
+                Correo <span class="obligatorio">*</span>
+              </label>
+              <input type="text" id="correo" th:field="*{correo}">
+              <small class="error-message" id="errorCorreo"></small>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="submit">Guardar</button>
+            <a class="btn secondary" th:href="@{/empresa/mostrarEmpresas}">Cancelar</a>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("formEmpresa");
+
+      const nombre = document.getElementById("nombre");
+      const telefono = document.getElementById("telefono");
+      const direccion = document.getElementById("direccion");
+      const correo = document.getElementById("correo");
+
+      const errorNombre = document.getElementById("errorNombre");
+      const errorTelefono = document.getElementById("errorTelefono");
+      const errorDireccion = document.getElementById("errorDireccion");
+      const errorCorreo = document.getElementById("errorCorreo");
+
+      function validarNombre() {
+        const valor = nombre.value.trim();
+
+        if (valor === "") {
+          errorNombre.textContent = "El nombre de la empresa es obligatorio";
+          nombre.classList.add("error");
+          return false;
+        }
+
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/.test(valor)) {
+          errorNombre.textContent = "El nombre solo puede contener letras y espacios";
+          nombre.classList.add("error");
+          return false;
+        }
+
+        if (valor.length < 3) {
+          errorNombre.textContent = "El nombre debe tener al menos 3 caracteres";
+          nombre.classList.add("error");
+          return false;
+        }
+
+        errorNombre.textContent = "";
+        nombre.classList.remove("error");
+        return true;
+      }
+
+      function validarTelefono() {
+        const valor = telefono.value.trim();
+
+        if (valor === "") {
+          errorTelefono.textContent = "El teléfono es obligatorio";
+          telefono.classList.add("error");
+          return false;
+        }
+
+        if (!/^[0-9]+$/.test(valor)) {
+          errorTelefono.textContent = "El teléfono solo debe contener números";
+          telefono.classList.add("error");
+          return false;
+        }
+
+        if (valor.length !== 10) {
+          errorTelefono.textContent = "El teléfono debe contener 10 dígitos";
+          telefono.classList.add("error");
+          return false;
+        }
+
+        errorTelefono.textContent = "";
+        telefono.classList.remove("error");
+        return true;
+      }
+
+      function validarDireccion() {
+        const valor = direccion.value.trim();
+
+        if (valor === "") {
+          errorDireccion.textContent = "La dirección es obligatoria";
+          direccion.classList.add("error");
+          return false;
+        }
+
+        if (valor.length < 5) {
+          errorDireccion.textContent = "La dirección debe tener al menos 5 caracteres";
+          direccion.classList.add("error");
+          return false;
+        }
+
+        errorDireccion.textContent = "";
+        direccion.classList.remove("error");
+        return true;
+      }
+
+      function validarCorreo() {
+        const valor = correo.value.trim();
+
+        if (valor === "") {
+          errorCorreo.textContent = "El correo es obligatorio";
+          correo.classList.add("error");
+          return false;
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor)) {
+          errorCorreo.textContent = "Debe ingresar un correo válido";
+          correo.classList.add("error");
+          return false;
+        }
+
+        errorCorreo.textContent = "";
+        correo.classList.remove("error");
+        return true;
+      }
+
+      nombre.addEventListener("input", validarNombre);
+      telefono.addEventListener("input", validarTelefono);
+      direccion.addEventListener("input", validarDireccion);
+      correo.addEventListener("input", validarCorreo);
+
+      nombre.addEventListener("blur", validarNombre);
+      telefono.addEventListener("blur", validarTelefono);
+      direccion.addEventListener("blur", validarDireccion);
+      correo.addEventListener("blur", validarCorreo);
+
+      form.addEventListener("submit", function (e) {
+        const okNombre = validarNombre();
+        const okTelefono = validarTelefono();
+        const okDireccion = validarDireccion();
+        const okCorreo = validarCorreo();
+
+        if (!okNombre || !okTelefono || !okDireccion || !okCorreo) {
+          e.preventDefault();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<aside th:fragment="aside" class="sidebar"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<h3>Menú principal</h3>
+
+	<div class="menu-section">
+		<a th:href="@{/inicio}"> <i class="bi bi-house-door"></i> Inicio
+		</a>
+	</div>
+
+	<div class="menu-section" sec:authorize="hasRole('JEFE_DIVISION')">
+		<span class="menu-title">Catálogos base</span> <a
+			th:href="@{/carrera/mostrarCarreras}"> <i
+			class="bi bi-journal-bookmark"></i> Carreras
+		</a> <a th:href="@{/departamentoAcademico/mostrarDepartamentosAcademicos}">
+			<i class="bi bi-diagram-3"></i> Departamentos académicos
+		</a> <a th:href="@{/empresa/mostrarEmpresas}"> <i
+			class="bi bi-building"></i> Empresas
+		</a>
+	</div>
+
+	<div class="menu-section" sec:authorize="hasRole('JEFE_DIVISION')">
+		<span class="menu-title">Actores</span> <a
+			th:href="@{/residente/mostrarResidentes}"> <i
+			class="bi bi-person-badge"></i> Residentes
+		</a> <a th:href="@{/asesorInterno/mostrarAsesoresInternos}"> <i
+			class="bi bi-person-workspace"></i> Asesores internos
+		</a> <a th:href="@{/asesorExterno/mostrarAsesoresExternos}"> <i
+			class="bi bi-person-vcard"></i> Asesores externos
+		</a>
+	</div>
+
+	<div class="menu-section" sec:authorize="hasRole('JEFE_DIVISION')">
+		<span class="menu-title">Proyectos</span> <a
+			th:href="@{/proyectoBanco/mostrarProyectosBanco}"> <i
+			class="bi bi-folder2-open"></i> Banco de proyectos
+		</a> <a th:href="@{/propuestaProyecto/revisar}"> <i
+			class="bi bi-clipboard-check"></i> Revisar propuestas
+		</a> <a th:href="@{/proyectoResidencia/mostrarProyectosResidencia}"> <i
+			class="bi bi-briefcase"></i> Proyectos de residencia
+		</a>
+	</div>
+
+	<div class="menu-section" sec:authorize="hasRole('RESIDENTE')">
+		<span class="menu-title">Mi residencia</span> <a
+			th:href="@{/proyectoBanco/residente}"> <i
+			class="bi bi-folder2-open"></i> Banco de proyectos
+		</a> <a th:href="@{/propuestaProyecto/mostrarPropuestas}"> <i
+			class="bi bi-lightbulb"></i> Mi propuesta de proyecto
+		</a> <a th:href="@{/reportePreliminar/mostrarReportes}"> <i
+			class="bi bi-file-earmark-text"></i> Mi reporte preliminar
+		</a> <a th:href="@{/documentoResidencia/mostrarDocumentos}"> <i
+			class="bi bi-folder2-open"></i> Mi expediente documental
+		</a>
+	</div>
+
+	<div class="menu-section"
+		sec:authorize="hasAnyRole('ASESOR_INTERNO','ASESOR_EXTERNO')">
+		<span class="menu-title">Revisión académica</span> <a
+			th:href="@{/seguimientoResidencia/mostrarSeguimientos}"> <i
+			class="bi bi-list-check"></i> Seguimiento de residencia
+		</a> <a th:href="@{/evaluacionReporteFinal/mostrar}"> <i
+			class="bi bi-journal-check"></i> Evaluación reporte final
+		</a> <a sec:authorize="hasRole('ASESOR_INTERNO')"
+			th:href="@{/documentoResidencia/mostrarDocumentos}"> <i
+			class="bi bi-folder2-open"></i> Expediente documental
+		</a>
+	</div>
+
+	<div class="menu-section" sec:authorize="hasRole('JEFE_DIVISION')">
+		<span class="menu-title">Supervisión</span> <a
+			th:href="@{/reportePreliminar/mostrarReportes}"> <i
+			class="bi bi-file-earmark-text"></i> Consultar reportes preliminares
+		</a> <a th:href="@{/reportePreliminar/revisar}"> <i
+			class="bi bi-file-earmark-check"></i> Dictaminar reporte preliminar
+		</a> <a th:href="@{/documentoResidencia/mostrarDocumentos}"> <i
+			class="bi bi-folder2-open"></i> Consultar expediente documental
+		</a> <a th:href="@{/seguimientoResidencia/mostrarSeguimientos}"> <i
+			class="bi bi-list-check"></i> Consultar seguimientos
+		</a> <a th:href="@{/evaluacionReporteFinal/mostrar}"> <i
+			class="bi bi-journal-check"></i> Consultar evaluación final
+		</a>
+	</div>
+
+	<div class="menu-section" sec:authorize="hasRole('JEFE_DIVISION')">
+		<span class="menu-title">Administración</span> <a
+			th:href="@{/usuario/mostrarUsuarios}"> <i class="bi bi-people"></i>
+			Usuarios
+		</a>
+	</div>
+
+	<div class="menu-section" sec:authorize="isAuthenticated()">
+		<span class="menu-title">Sesión</span>
+
+		<form th:action="@{/logout}" method="post" style="margin: 0;">
+			<input type="hidden" th:name="${_csrf.parameterName}"
+				th:value="${_csrf.token}" />
+			<button type="submit" class="btn danger" style="width: 100%;"
+				onclick="return confirm('¿Desea cerrar sesión?')">
+				<i class="bi bi-box-arrow-right"></i> Cerrar sesión
+			</button>
+		</form>
+	</div>
+</aside>
+
+<footer th:fragment="footer"
+	class="bg-dark text-white text-center py-3 mt-5"> Alexa García
+	Castro | No.Control: 22520164 </footer>

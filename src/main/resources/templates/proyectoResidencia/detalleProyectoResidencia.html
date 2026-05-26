@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Detalle proyecto de residencia</title>
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+	<header class="header">
+		<div class="header-content">
+			<img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+			<div>
+				<h1>Sistema de Residencias Profesionales</h1>
+				<p>Detalle del proyecto de residencia</p>
+			</div>
+		</div>
+	</header>
+
+	<div class="layout">
+		<aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+		<main class="main">
+			<div class="card">
+				<h2>Detalle del proyecto de residencia</h2>
+
+
+				<p>
+					<strong>ID:</strong> <span
+						th:text="${proyectoResidencia.idProyectoResidencia}"></span>
+				</p>
+				<p>
+					<strong>Origen:</strong> <span
+						th:text="${proyectoResidencia.origenProyecto}"></span>
+				</p>
+				<p>
+					<strong>Nombre del proyecto:</strong> <span
+						th:text="${proyectoResidencia.nombreProyecto}"></span>
+				</p>
+				<p>
+					<strong>Objetivo:</strong> <span
+						th:text="${proyectoResidencia.objetivo}"></span>
+				</p>
+				<p>
+					<strong>Descripción:</strong> <span
+						th:text="${proyectoResidencia.descripcion}"></span>
+				</p>
+				<p>
+					<strong>Periodo:</strong> <span
+						th:text="${proyectoResidencia.periodo}"></span>
+				</p>
+				<p>
+					<strong>Fecha de inicio:</strong> <span
+						th:text="${#dates.format(proyectoResidencia.fechaInicio, 'dd-MM-yyyy')}"></span>
+				</p>
+				<p>
+					<strong>Fecha de fin:</strong> <span
+						th:text="${#dates.format(proyectoResidencia.fechaFin, 'dd-MM-yyyy')}"></span>
+				</p>
+				<p>
+					<strong>Horas:</strong> <span th:text="${proyectoResidencia.horas}"></span>
+				</p>
+				<p>
+					<strong>Etapa actual:</strong> <span
+						th:text="${proyectoResidencia.etapaActual}"></span>
+				</p>
+				<p>
+					<strong>Residente:</strong> <span
+						th:text="${proyectoResidencia.residente != null ? proyectoResidencia.residente.nombre + ' ' + proyectoResidencia.residente.apellidoPaterno + ' ' + proyectoResidencia.residente.apellidoMaterno : ''}"></span>
+				</p>
+				<p>
+					<strong>Empresa:</strong> <span
+						th:text="${proyectoResidencia.empresa != null ? proyectoResidencia.empresa.nombre : ''}"></span>
+				</p>
+				<p>
+					<strong>Asesor interno:</strong> <span
+						th:text="${proyectoResidencia.asesorInterno != null ? proyectoResidencia.asesorInterno.nombre + ' ' + proyectoResidencia.asesorInterno.apellidoPaterno : ''}"></span>
+				</p>
+				<p>
+					<strong>Asesor externo:</strong> <span
+						th:text="${proyectoResidencia.asesorExterno != null ? proyectoResidencia.asesorExterno.nombre + ' ' + proyectoResidencia.asesorExterno.apellidoPaterno : ''}"></span>
+				</p>
+				<p>
+					<strong>Calificación final de residencia:</strong> <span
+						th:text="${proyectoResidencia.calificacionFinalResidencia}"></span>
+				</p>
+
+				<div class="actions">
+					<a class="btn secondary"
+						th:href="@{/proyectoResidencia/mostrarProyectosResidencia}">Regresar</a>
+				</div>
+			</div>
+		</main>
+	</div>
+</body>
+</html>

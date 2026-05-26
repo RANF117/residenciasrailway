@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de departamento académico</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+      <div>
+        <h1>Sistema de Residencias Profesionales</h1>
+        <p>Registro de departamento académico</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+    <main class="main">
+      <div class="card">
+        <h2>Formulario de departamento académico</h2>
+
+        <p class="nota-obligatoria">
+          Los campos marcados con <span class="obligatorio">*</span> son obligatorios.
+        </p>
+
+        <form th:action="@{/departamentoAcademico/guardar}" th:object="${departamentoAcademico}" method="post" id="formDepartamento">
+          <input type="hidden" th:field="*{idDepartamentoAcademico}">
+          <input type="hidden" th:field="*{estatus}">
+
+          <div class="grid">
+            <div class="field">
+              <label for="nombre">
+                Nombre del departamento académico <span class="obligatorio">*</span>
+              </label>
+              <input type="text" id="nombre" th:field="*{nombre}">
+              <small class="error-message" id="errorNombre"></small>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="submit">Guardar</button>
+            <a class="btn secondary" th:href="@{/departamentoAcademico/mostrarDepartamentosAcademicos}">Cancelar</a>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("formDepartamento");
+      const nombre = document.getElementById("nombre");
+      const errorNombre = document.getElementById("errorNombre");
+
+      function validarNombre() {
+        const valor = nombre.value.trim();
+
+        if (valor === "") {
+          errorNombre.textContent = "El nombre del departamento es obligatorio";
+          nombre.classList.add("error");
+          return false;
+        }
+
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/.test(valor)) {
+          errorNombre.textContent = "El nombre solo puede contener letras y espacios";
+          nombre.classList.add("error");
+          return false;
+        }
+
+        if (valor.length < 4) {
+          errorNombre.textContent = "El nombre debe tener al menos 4 caracteres";
+          nombre.classList.add("error");
+          return false;
+        }
+
+        if (valor.length > 100) {
+          errorNombre.textContent = "El nombre no debe exceder 100 caracteres";
+          nombre.classList.add("error");
+          return false;
+        }
+
+        errorNombre.textContent = "";
+        nombre.classList.remove("error");
+        return true;
+      }
+
+      nombre.addEventListener("input", validarNombre);
+      nombre.addEventListener("blur", validarNombre);
+
+      form.addEventListener("submit", function (e) {
+        const okNombre = validarNombre();
+
+        if (!okNombre) {
+          e.preventDefault();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

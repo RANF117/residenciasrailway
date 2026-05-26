@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: residencias-mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: residencias
+      MYSQL_ROOT_PASSWORD: alexa
+      TZ: America/Mexico_City
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  app:
+    build: .
+    container_name: residencias-app
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/residencias?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: alexa
+
+volumes:
+  mysql_data:

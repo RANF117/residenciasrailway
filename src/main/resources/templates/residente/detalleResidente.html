@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalle residente</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+      <div>
+        <h1>Sistema de Residencias Profesionales</h1>
+        <p>Detalle de residente</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+    <main class="main">
+      <div class="card">
+        <h2>Detalle de residente</h2>
+
+        <div style="margin-bottom: 20px;">
+          <img th:if="${residente.foto == 'noFoto.jpeg'}"
+               th:src="@{/img/noFoto.jpeg}"
+               alt="Foto residente"
+               width="140"
+               style="border-radius: 10px;">
+
+          <img th:if="${residente.foto != 'noFoto.jpeg'}"
+               th:src="@{/residencias/residentes/{img}(img=${residente.foto})}"
+               alt="Foto residente"
+               width="140"
+               style="border-radius: 10px;">
+        </div>
+
+        <p><strong>ID:</strong> <span th:text="${residente.idResidente}"></span></p>
+        <p><strong>Nombre:</strong> <span th:text="${residente.nombre}"></span></p>
+        <p><strong>Apellido paterno:</strong> <span th:text="${residente.apellidoPaterno}"></span></p>
+        <p><strong>Apellido materno:</strong> <span th:text="${residente.apellidoMaterno}"></span></p>
+        <p><strong>Número de control:</strong> <span th:text="${residente.numeroControl}"></span></p>
+        <p><strong>Correo:</strong> <span th:text="${residente.correo}"></span></p>
+        <p><strong>Teléfono:</strong> <span th:text="${residente.telefono}"></span></p>
+        <p><strong>Carrera:</strong> <span th:text="${residente.carrera != null ? residente.carrera.nombre : ''}"></span></p>
+
+        <div class="actions">
+          <a class="btn secondary" th:href="@{/residente/mostrarResidentes}">Regresar</a>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

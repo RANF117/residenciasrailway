@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario de residente</title>
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+	<header class="header">
+		<div class="header-content">
+			<img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+			<div>
+				<h1>Sistema de Residencias Profesionales</h1>
+				<p>Registro de residente</p>
+			</div>
+		</div>
+	</header>
+
+	<div class="layout">
+		<aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+		<main class="main">
+			<div class="card">
+				<h2>Formulario de residente</h2>
+
+				<p class="nota-obligatoria">
+					Los campos marcados con <span class="obligatorio">*</span> son
+					obligatorios.
+				</p>
+
+				<form th:action="@{/residente/guardar}" th:object="${residente}"
+					method="post" enctype="multipart/form-data" id="formResidente">
+					<input type="hidden" th:field="*{idResidente}"> <input
+						type="hidden" th:field="*{estatus}"> <input type="hidden"
+						th:field="*{foto}">
+
+					<div class="grid">
+						<div class="field">
+							<label for="nombre">Nombre <span class="obligatorio">*</span></label>
+							<input type="text" id="nombre" th:field="*{nombre}"> <small
+								class="error-message" id="errorNombre"></small>
+						</div>
+
+						<div class="field">
+							<label for="apellidoPaterno">Apellido paterno <span
+								class="obligatorio">*</span></label> <input type="text"
+								id="apellidoPaterno" th:field="*{apellidoPaterno}"> <small
+								class="error-message" id="errorApellidoPaterno"></small>
+						</div>
+
+						<div class="field">
+							<label for="apellidoMaterno">Apellido materno <span
+								class="obligatorio">*</span></label> <input type="text"
+								id="apellidoMaterno" th:field="*{apellidoMaterno}"> <small
+								class="error-message" id="errorApellidoMaterno"></small>
+						</div>
+
+						<div class="field">
+							<label for="numeroControl">Número de control <span
+								class="obligatorio">*</span></label> <input type="text"
+								id="numeroControl" th:field="*{numeroControl}"> <small
+								class="error-message" id="errorNumeroControl"></small>
+						</div>
+
+						<div class="field">
+							<label for="correo">Correo <span class="obligatorio">*</span></label>
+							<input type="text" id="correo" th:field="*{correo}"> <small
+								class="error-message" id="errorCorreo"></small>
+						</div>
+
+						<div class="field">
+							<label for="telefono">Teléfono <span class="obligatorio">*</span></label>
+							<input type="text" id="telefono" th:field="*{telefono}"
+								maxlength="10"> <small class="error-message"
+								id="errorTelefono"></small>
+						</div>
+
+						<div class="field">
+							<label for="carrera">Carrera <span class="obligatorio">*</span></label>
+							<select id="carrera" th:field="*{carrera.idCarrera}">
+								<option value="">Seleccione una carrera</option>
+								<option th:each="c : ${carreras}" th:value="${c.idCarrera}"
+									th:text="${c.nombre}"></option>
+							</select> <small class="error-message" id="errorCarrera"></small>
+						</div>
+
+						<div class="field">
+							<label for="usuario">Usuario del sistema <span
+								class="obligatorio">*</span></label> <select id="usuario"
+								th:field="*{usuario.id}">
+								<option value="">Seleccione un usuario</option>
+								<option th:each="u : ${usuariosDisponibles}" th:value="${u.id}"
+									th:text="${u.username}"></option>
+							</select> <small th:if="${#lists.isEmpty(usuariosDisponibles)}"
+								class="error-message"> No hay usuarios disponibles para
+								vincular. </small>
+
+							<div th:if="${#lists.isEmpty(usuariosDisponibles)}"
+								style="margin-top: 10px;">
+								<a class="btn secondary" th:href="@{/usuario/mostrarUsuarios}">
+									Ir a usuarios </a>
+							</div>
+						</div>
+
+						<div class="field">
+							<label for="archivo">Foto</label> <input type="file" id="archivo"
+								name="archivo" accept=".jpg,.jpeg,.png"> <small
+								class="error-message" id="errorArchivo"></small>
+						</div>
+					</div>
+
+					<div class="actions">
+						<button type="submit">Guardar</button>
+						<a class="btn secondary" th:href="@{/residente/mostrarResidentes}">Cancelar</a>
+					</div>
+				</form>
+			</div>
+		</main>
+	</div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalle propuesta de proyecto</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+      <div>
+        <h1>Sistema de Residencias Profesionales</h1>
+        <p>Detalle de propuesta de proyecto</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+    <main class="main">
+      <div class="card">
+        <h2>Detalle de propuesta de proyecto</h2>
+
+        <p><strong>ID:</strong> <span th:text="${propuestaProyecto.idPropuestaProyecto}"></span></p>
+        <p><strong>Nombre del proyecto:</strong> <span th:text="${propuestaProyecto.nombreProyecto}"></span></p>
+        <p><strong>Residente:</strong> <span th:text="${propuestaProyecto.residente != null ? propuestaProyecto.residente.nombre + ' ' + propuestaProyecto.residente.apellidoPaterno + ' ' + propuestaProyecto.residente.apellidoMaterno : ''}"></span></p>
+        <p><strong>Empresa:</strong> <span th:text="${propuestaProyecto.empresa != null ? propuestaProyecto.empresa.nombre : ''}"></span></p>
+        <p><strong>Periodo:</strong> <span th:text="${propuestaProyecto.periodo}"></span></p>
+        <p><strong>Estado de revisión:</strong> <span th:text="${propuestaProyecto.estadoRevision}"></span></p>
+        <p><strong>Observaciones:</strong> <span th:text="${propuestaProyecto.observacionesRevision}"></span></p>
+        <p><strong>Objetivo:</strong> <span th:text="${propuestaProyecto.objetivo}"></span></p>
+        <p><strong>Descripción:</strong> <span th:text="${propuestaProyecto.descripcion}"></span></p>
+        <p><strong>Justificación:</strong> <span th:text="${propuestaProyecto.justificacion}"></span></p>
+
+        <div class="actions">
+          <a class="btn secondary" th:href="@{/propuestaProyecto/mostrarPropuestas}">Regresar</a>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

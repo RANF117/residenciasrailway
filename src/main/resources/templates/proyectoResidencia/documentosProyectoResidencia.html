@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Documentos del proyecto</title>
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+	<header class="header">
+		<div class="header-content">
+			<img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+			<div>
+				<h1>Sistema de Residencias Profesionales</h1>
+				<p>Expediente documental del proyecto</p>
+			</div>
+		</div>
+	</header>
+
+	<div class="layout">
+		<aside th:replace="~{fragmento/fragmentProyectos :: asideProyectos}"></aside>
+
+		<main class="main">
+			<div class="card">
+				<h2>Documentos del proyecto</h2>
+
+				<section class="section-block">
+					<h3 class="section-title">Datos generales</h3>
+					<div class="detail-grid">
+						<p>
+							<strong>Proyecto:</strong> <span
+								th:text="${proyectoResidencia.nombreProyecto}"></span>
+						</p>
+
+						<p>
+							<strong>Residente:</strong> <span
+								th:if="${proyectoResidencia.residente != null and proyectoResidencia.residente.usuario != null}"
+								th:text="${proyectoResidencia.residente.usuario.nombre + ' ' + proyectoResidencia.residente.usuario.apellidoPaterno + ' ' + proyectoResidencia.residente.usuario.apellidoMaterno}">
+							</span>
+						</p>
+
+						<p>
+							<strong>Periodo:</strong> <span
+								th:text="${proyectoResidencia.periodo}"></span>
+						</p>
+						<p>
+							<strong>Etapa actual:</strong> <span
+								th:text="${proyectoResidencia.etapaActual}"></span>
+						</p>
+					</div>
+				</section>
+
+				<section class="section-block">
+					<h3 class="section-title">Expediente documental</h3>
+
+					<table>
+						<thead>
+							<tr>
+								<th>Documento</th>
+								<th>Estado</th>
+								<th>Acciones</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Proyecto de residencia</td>
+								<td><span class="badge success">DISPONIBLE</span></td>
+								<td><a class="btn secondary"
+									th:href="@{/proyectoResidencia/ver/{id}(id=${proyectoResidencia.id}, origen='documentos', idProyecto=${proyectoResidencia.id})}">
+										Ver </a> <a class="btn"
+									th:href="@{/proyectoResidencia/pdf/{id}(id=${proyectoResidencia.id})}">
+										PDF </a></td>
+							</tr>
+
+							<tr>
+								<td>Reporte preliminar</td>
+								<td><span th:if="${reportePreliminar != null}"
+									class="badge success"
+									th:text="${reportePreliminar.estadoReporte}"></span> <span
+									th:unless="${reportePreliminar != null}" class="badge danger">NO
+										CARGADO</span></td>
+								<td><span th:if="${reportePreliminar != null}"> <a
+										class="btn secondary"
+										th:href="@{/reportePreliminar/ver/{id}(id=${reportePreliminar.id}, origen='documentos', idProyecto=${proyectoResidencia.id})}">
+											Ver </a> <a class="btn"
+										th:href="@{/reportePreliminar/pdf/{id}(id=${reportePreliminar.id})}">
+											PDF </a>
+								</span> <span th:unless="${reportePreliminar != null}"> <span
+										class="text-muted">Pendiente</span>
+								</span></td>
+							</tr>
+							<tr>
+								<td>Carta de presentación</td>
+								<td><span class="badge danger">PENDIENTE</span></td>
+								<td><span class="text-muted">Sin documento</span></td>
+
+							</tr>
+							<tr>
+								<td>Carta de agradecimiento</td>
+								<td><span class="badge danger">PENDIENTE</span></td>
+								<td><span class="text-muted">Sin documento</span></td>
+							</tr>
+							<tr>
+								<td>Carta de aceptación</td>
+								<td><span class="badge danger">PENDIENTE</span></td>
+								<td><span class="text-muted">Sin documento</span></td>
+							</tr>
+
+							<tr>
+								<td>Seguimiento 1</td>
+								<td><span class="badge danger">PENDIENTE</span></td>
+								<td><span class="text-muted">Sin documento</span></td>
+							</tr>
+
+							<tr>
+								<td>Seguimiento 2</td>
+								<td><span class="badge danger">PENDIENTE</span></td>
+								<td><span class="text-muted">Sin documento</span></td>
+							</tr>
+
+							<tr>
+								<td>Reporte final</td>
+								<td><span class="badge danger">PENDIENTE</span></td>
+								<td><span class="text-muted">Sin documento</span></td>
+							</tr>
+
+							<tr>
+								<td>Evaluación del reporte final</td>
+								<td><span class="badge danger">PENDIENTE</span></td>
+								<td><span class="text-muted">Sin documento</span></td>
+							</tr>
+
+							<tr>
+								<td>Carta de terminación</td>
+								<td><span class="badge danger">PENDIENTE</span></td>
+								<td><span class="text-muted">Sin documento</span></td>
+							</tr>
+
+							<tr>
+								<td>Liberación del asesor interno</td>
+								<td><span class="badge danger">PENDIENTE</span></td>
+								<td><span class="text-muted">Sin documento</span></td>
+							</tr>
+
+						</tbody>
+					</table>
+				</section>
+
+				<div class="actions">
+					<a class="btn secondary"
+						th:href="@{/proyectoResidencia/mostrarProyectosResidencia}">
+						Regresar </a>
+				</div>
+			</div>
+		</main>
+	</div>
+</body>
+</html>

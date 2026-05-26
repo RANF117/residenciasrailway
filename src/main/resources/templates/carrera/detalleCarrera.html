@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalle carrera</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+      <div>
+        <h1>Sistema de Residencias Profesionales</h1>
+        <p>Detalle de carrera</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+    <main class="main">
+      <div class="card">
+        <h2>Detalle de carrera</h2>
+
+        <p><strong>ID:</strong> <span th:text="${carrera.idCarrera}"></span></p>
+        <p><strong>Nombre:</strong> <span th:text="${carrera.nombre}"></span></p>
+        <p><strong>Clave:</strong> <span th:text="${carrera.clave}"></span></p>
+
+        <div class="actions">
+          <a class="btn secondary" th:href="@{/carrera/mostrarCarreras}">Regresar</a>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

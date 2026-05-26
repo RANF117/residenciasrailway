@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Roles</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+  <header class="header">
+		<div class="header-content">
+			<img src="/img/logoTec.jpeg" alt="Logo Tec" class="logo-header">
+
+			<div>
+				<h1>Sistema de Residencias Profesionales</h1>
+				<p>Registro de roles</p>
+			</div>
+		</div>
+	</header>
+
+  <div class="layout">
+    <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+    <main class="main">
+      <div class="card">
+
+        <div th:if="${msg}" class="alert-success" style="margin-bottom: 15px; padding: 10px;">
+          <span th:text="${msg}"></span>
+        </div>
+
+        <div class="actions">
+          <a class="btn" th:href="@{/rol/formulario}">
+            <i class="bi bi-plus-circle"></i> Nuevo rol
+          </a>
+        </div>
+
+        <h2>Roles registrados</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="r : ${rol}">
+              <td th:text="${r.id}"></td>
+              <td th:text="${r.nombre}"></td>
+             <td>
+			  <a class="btn light" th:href="..."><i class="bi bi-eye"></i></a>
+			  <a class="btn secondary" th:href="..."><i class="bi bi-pencil-square"></i></a>
+			  <a class="btn danger" th:href="..." onclick="return confirm('¿Desea eliminar?')"><i class="bi bi-trash"></i></a>
+			</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </main>
+  </div>
+</body>
+</html>

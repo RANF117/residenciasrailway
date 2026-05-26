@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalle usuario</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="header">
+  <div class="header-content">
+    <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+    <div>
+      <h1>Sistema de Residencias Profesionales</h1>
+      <p>Detalle del usuario</p>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+  <main class="main">
+    <div class="card">
+      <h2>Detalle del usuario</h2>
+
+      <p><strong>ID:</strong> <span th:text="${usuario.id}"></span></p>
+      <p><strong>Username:</strong> <span th:text="${usuario.username}"></span></p>
+      <p><strong>Rol:</strong> <span th:text="${usuario.rol != null ? usuario.rol.nombre : ''}"></span></p>
+      <p><strong>Estatus:</strong>
+        <span th:if="${usuario.estatus == 1}">Activo</span>
+        <span th:if="${usuario.estatus == 0}">Inactivo</span>
+      </p>
+
+      <div class="actions">
+        <a class="btn secondary" th:href="@{/usuario/mostrarUsuarios}">Regresar</a>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

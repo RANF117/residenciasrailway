@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de reporte preliminar</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="header">
+  <div class="header-content">
+    <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+    <div>
+      <h1>Sistema de Residencias Profesionales</h1>
+      <p>Registro de reporte preliminar</p>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+  <main class="main">
+    <div class="card">
+      <h2>Formulario de reporte preliminar</h2>
+
+      <form th:action="@{/reportePreliminar/guardar}" th:object="${reportePreliminar}" method="post" id="formReportePreliminar">
+        <input type="hidden" th:field="*{idReportePreliminar}">
+        <input type="hidden" th:field="*{estatus}">
+        <input type="hidden" th:field="*{dictamen}">
+        <input type="hidden" th:field="*{observacionesDictamen}">
+
+        <div class="grid">
+          <div class="field">
+            <label>Proyecto de residencia</label>
+            <small class="error-message" id="errorProyectoResidencia"></small>
+            <select id="proyectoResidencia" th:field="*{proyectoResidencia.idProyectoResidencia}">
+              <option value="">Seleccione un proyecto</option>
+              <option th:each="p : ${proyectosResidencia}"
+                      th:value="${p.idProyectoResidencia}"
+                      th:text="${p.nombreProyecto}"
+                      th:data-objetivo="${p.objetivo}">
+              </option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Fecha de entrega</label>
+            <small class="error-message" id="errorFechaEntrega"></small>
+            <input type="date" id="fechaEntrega" th:field="*{fechaEntrega}">
+          </div>
+
+          <div class="field" style="grid-column:1 / -1;">
+            <label>Objetivo del proyecto</label>
+            <small class="error-message" id="errorObjetivoProyecto"></small>
+            <textarea id="objetivoProyecto" th:field="*{objetivoProyecto}" rows="3"></textarea>
+          </div>
+
+          <div class="field" style="grid-column:1 / -1;">
+            <label>Actividades realizadas</label>
+            <small class="error-message" id="errorActividadesRealizadas"></small>
+            <textarea id="actividadesRealizadas" th:field="*{actividadesRealizadas}" rows="4"></textarea>
+          </div>
+
+          <div class="field" style="grid-column:1 / -1;">
+            <label>Avance general</label>
+            <small class="error-message" id="errorAvanceGeneral"></small>
+            <textarea id="avanceGeneral" th:field="*{avanceGeneral}" rows="4"></textarea>
+          </div>
+
+          <div class="field" style="grid-column:1 / -1;">
+            <label>Observaciones</label>
+            <small class="error-message" id="errorObservaciones"></small>
+            <textarea id="observaciones" th:field="*{observaciones}" rows="4"></textarea>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit">Guardar</button>
+          <a class="btn secondary" th:href="@{/reportePreliminar/mostrarReportes}">Cancelar</a>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("formReportePreliminar");
+  const proyectoResidencia = document.getElementById("proyectoResidencia");
+  const fechaEntrega = document.getElementById("fechaEntrega");
+  const objetivoProyecto = document.getElementById("objetivoProyecto");
+  const actividadesRealizadas = document.getElementById("actividadesRealizadas");
+  const avanceGeneral = document.getElementById("avanceGeneral");
+  const observaciones = document.getElementById("observaciones");
+
+  const errorProyectoResidencia = document.getElementById("errorProyectoResidencia");
+  const errorFechaEntrega = document.getElementById("errorFechaEntrega");
+  const errorObjetivoProyecto = document.getElementById("errorObjetivoProyecto");
+  const errorActividadesRealizadas = document.getElementById("errorActividadesRealizadas");
+  const errorAvanceGeneral = document.getElementById("errorAvanceGeneral");
+  const errorObservaciones = document.getElementById("errorObservaciones");
+
+  proyectoResidencia.addEventListener("change", function () {
+    const option = proyectoResidencia.options[proyectoResidencia.selectedIndex];
+    if (proyectoResidencia.value !== "") {
+      objetivoProyecto.value = option.dataset.objetivo || "";
+    }
+  });
+
+  function validarSelect(input, error, mensaje) {
+    if (input.value === "") {
+      error.textContent = mensaje;
+      input.classList.add("error");
+      return false;
+    }
+    error.textContent = "";
+    input.classList.remove("error");
+    return true;
+  }
+
+  function validarTexto(input, error, mensaje) {
+    if (input.value.trim() === "") {
+      error.textContent = mensaje;
+      input.classList.add("error");
+      return false;
+    }
+    error.textContent = "";
+    input.classList.remove("error");
+    return true;
+  }
+
+  function validarFecha() {
+    if (fechaEntrega.value === "") {
+      errorFechaEntrega.textContent = "La fecha de entrega es obligatoria";
+      fechaEntrega.classList.add("error");
+      return false;
+    }
+    errorFechaEntrega.textContent = "";
+    fechaEntrega.classList.remove("error");
+    return true;
+  }
+
+  form.addEventListener("submit", function (e) {
+    const ok1 = validarSelect(proyectoResidencia, errorProyectoResidencia, "Debe seleccionar un proyecto de residencia");
+    const ok2 = validarFecha();
+    const ok3 = validarTexto(objetivoProyecto, errorObjetivoProyecto, "El objetivo del proyecto es obligatorio");
+    const ok4 = validarTexto(actividadesRealizadas, errorActividadesRealizadas, "Las actividades realizadas son obligatorias");
+    const ok5 = validarTexto(avanceGeneral, errorAvanceGeneral, "El avance general es obligatorio");
+    const ok6 = validarTexto(observaciones, errorObservaciones, "Las observaciones son obligatorias");
+
+    if (!ok1 || !ok2 || !ok3 || !ok4 || !ok5 || !ok6) {
+      e.preventDefault();
+    }
+  });
+});
+</script>
+</body>
+</html>

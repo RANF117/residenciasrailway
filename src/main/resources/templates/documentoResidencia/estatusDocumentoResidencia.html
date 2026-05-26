@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Estatus documentos</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="header">
+  <div class="header-content">
+    <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+    <div>
+      <h1>Sistema de Residencias Profesionales</h1>
+      <p>Administración de estatus de documentos</p>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+  <main class="main">
+    <div class="card">
+      <h2>Documentos activos e inactivos</h2>
+
+      <form th:action="@{/documentoResidencia/estatusDocumentos}" method="get" class="grid" style="margin-bottom:20px;">
+        <div class="field">
+          <label>Filtrar por tipo</label>
+          <select name="tipoDocumento">
+            <option value="">Todos</option>
+            <option value="PROYECTO_RESIDENCIA" th:selected="${tipoDocumento == 'PROYECTO_RESIDENCIA'}">PROYECTO_RESIDENCIA</option>
+            <option value="REPORTE_PRELIMINAR" th:selected="${tipoDocumento == 'REPORTE_PRELIMINAR'}">REPORTE_PRELIMINAR</option>
+            <option value="CARTA_ACEPTACION" th:selected="${tipoDocumento == 'CARTA_ACEPTACION'}">CARTA_ACEPTACION</option>
+            <option value="SEGUIMIENTO_1" th:selected="${tipoDocumento == 'SEGUIMIENTO_1'}">SEGUIMIENTO_1</option>
+            <option value="SEGUIMIENTO_2" th:selected="${tipoDocumento == 'SEGUIMIENTO_2'}">SEGUIMIENTO_2</option>
+            <option value="REPORTE_FINAL" th:selected="${tipoDocumento == 'REPORTE_FINAL'}">REPORTE_FINAL</option>
+            <option value="CARTA_TERMINACION" th:selected="${tipoDocumento == 'CARTA_TERMINACION'}">CARTA_TERMINACION</option>
+            <option value="LIBERACION" th:selected="${tipoDocumento == 'LIBERACION'}">LIBERACION</option>
+            <option value="OTRO" th:selected="${tipoDocumento == 'OTRO'}">OTRO</option>
+          </select>
+        </div>
+
+        <div class="actions" style="grid-column:1 / -1;">
+          <button type="submit">Buscar</button>
+          <a class="btn secondary" th:href="@{/documentoResidencia/estatusDocumentos}">Limpiar</a>
+        </div>
+      </form>
+
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tipo</th>
+            <th>Archivo</th>
+            <th>Estatus</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="d : ${documentoResidencia}">
+            <td th:text="${d.idDocumentoResidencia}"></td>
+            <td th:text="${d.tipoDocumento}"></td>
+            <td th:text="${d.nombreArchivo}"></td>
+            <td>
+              <span th:if="${d.estatus == 1}">Activo</span>
+              <span th:if="${d.estatus == 0}">Inactivo</span>
+            </td>
+            <td>
+              <a class="btn danger" th:if="${d.estatus == 1}" th:href="@{/documentoResidencia/eliminar/{id}(id=${d.idDocumentoResidencia})}">
+                Desactivar
+              </a>
+              <a class="btn" th:if="${d.estatus == 0}" th:href="@{/documentoResidencia/activar/{id}(id=${d.idDocumentoResidencia})}">
+                Activar
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="actions">
+        <a class="btn secondary" th:href="@{/documentoResidencia/mostrarDocumentos}">Regresar</a>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

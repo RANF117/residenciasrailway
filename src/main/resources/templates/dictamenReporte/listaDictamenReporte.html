@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de dictámenes</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+  <header class="header">
+    <h1>Sistema de Residencias Profesionales</h1>
+    <p>Dictámenes de reporte preliminar</p>
+  </header>
+
+  <div class="layout">
+    <aside th:replace="~{fragmento/fragment :: aside}"> </aside>
+
+    <main class="main">
+      <div class="card">
+        <h2>Dictámenes registrados</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Proyecto</th>
+              <th>Estudiante</th>
+              <th>Resultado</th>
+              <th>Fecha</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="d : ${dictamenes}">
+              <td th:text="${d.idDictamen}"></td>
+              <td th:text="${d.reportePreliminar.proyectoResidencia.nombreProyecto}"></td>
+              <td th:text="${d.reportePreliminar.proyectoResidencia.nombreEstudiante}"></td>
+              <td th:text="${d.resultado}"></td>
+              <td th:text="${d.fechaDictamen}"></td>
+              <td>
+                <a class="btn secondary" th:href="@{/dictamenReporte/detalle/{id}(id=${d.idDictamen})}">
+                  <i class="bi bi-eye"></i>
+                </a>
+                <a class="btn light" th:href="@{/dictamenReporte/editar/{id}(id=${d.idDictamen})}">
+                  <i class="bi bi-pencil-square"></i>
+                </a>
+                <a class="btn secondary"
+                   th:href="@{/dictamenReporte/eliminar(id=${d.idDictamen})}"
+                   onclick="return confirm('¿Desea eliminar este dictamen?')">
+                  <i class="bi bi-trash"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

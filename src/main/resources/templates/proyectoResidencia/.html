@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de proyecto</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+  <header class="header">
+    <h1>Sistema de Residencias Profesionales</h1>
+    <p>Registro de proyectos de residencia</p>
+  </header>
+
+  <div class="layout">
+    <aside th:replace="~{fragmento/fragment :: aside}"> </aside>
+
+    <main class="main">
+      <div class="card">
+        <h2>Formulario de proyecto</h2>
+
+        <form th:action="@{/proyecto/guardar}" th:object="${proyecto}" method="post">
+          <input type="hidden" th:field="*{idProyecto}">
+          <input type="hidden" th:field="*{estatus}">
+
+          <div class="grid">
+            <div class="field">
+              <label>Título del proyecto</label>
+              <input type="text" th:field="*{nombreProyecto}" required>
+            </div>
+
+            <div class="field">
+              <label>Nombre del estudiante</label>
+              <input type="text" th:field="*{nombreEstudiante}" required>
+            </div>
+
+            <div class="field">
+              <label>No. Control</label>
+              <input type="text" th:field="*{numeroControl}" required>
+            </div>
+
+            <div class="field">
+              <label>Carrera</label>
+              <input type="text" th:field="*{carrera}" required>
+            </div>
+
+            <div class="field">
+              <label>Correo</label>
+              <input type="email" th:field="*{correoEstudiante}" required>
+            </div>
+
+            <div class="field">
+              <label>Periodo</label>
+              <select th:field="*{periodo}" required>
+                <option value="">Seleccione un periodo</option>
+                <option value="ENERO-JUNIO">ENERO-JUNIO</option>
+                <option value="AGOSTO-DICIEMBRE">AGOSTO-DICIEMBRE</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Fecha de inicio</label>
+              <input type="date" th:field="*{fechaInicio}">
+            </div>
+
+            <div class="field">
+              <label>Fecha de fin</label>
+              <input type="date" th:field="*{fechaFin}">
+            </div>
+            <div class="field">
+			  <label>Asesor interno</label>
+			  <select th:field="*{asesorInterno}">
+			    <option value="">Seleccione un asesor interno</option>
+			    <option th:each="a : ${asesoresInternos}"
+			            th:value="${a.idAsesorInterno}"
+			            th:text="${a.nombre + ' ' + a.apellido}">
+			    </option>
+			  </select>
+			</div>
+			
+			<div class="field">
+			  <label>Asesor externo</label>
+			  <select th:field="*{asesorExterno}">
+			    <option value="">Seleccione un asesor externo</option>
+			    <option th:each="a : ${asesoresExternos}"
+			            th:value="${a.idAsesorExterno}"
+			            th:text="${a.nombre + ' ' + a.apellido + ' - ' + a.empresa}">
+			    </option>
+			  </select>
+			</div>
+
+            <div class="field" style="grid-column:1 / -1;">
+              <label>Descripción</label>
+              <textarea th:field="*{descripcion}"></textarea>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="submit">Guardar</button>
+            <a class="btn secondary" th:href="@{/proyecto/mostrar}">Cancelar</a>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalle reporte preliminar</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="header">
+  <div class="header-content">
+    <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+    <div>
+      <h1>Sistema de Residencias Profesionales</h1>
+      <p>Detalle del reporte preliminar</p>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+  <main class="main">
+    <div class="card">
+      <h2>Detalle del reporte preliminar</h2>
+
+      <p><strong>ID:</strong> <span th:text="${reportePreliminar.idReportePreliminar}"></span></p>
+      <p><strong>Proyecto:</strong> <span th:text="${reportePreliminar.proyectoResidencia != null ? reportePreliminar.proyectoResidencia.nombreProyecto : ''}"></span></p>
+      <p><strong>Fecha de entrega:</strong> <span th:text="${#dates.format(reportePreliminar.fechaEntrega, 'dd-MM-yyyy')}"></span></p>
+      <p><strong>Objetivo:</strong> <span th:text="${reportePreliminar.objetivoProyecto}"></span></p>
+      <p><strong>Actividades realizadas:</strong> <span th:text="${reportePreliminar.actividadesRealizadas}"></span></p>
+      <p><strong>Avance general:</strong> <span th:text="${reportePreliminar.avanceGeneral}"></span></p>
+      <p><strong>Observaciones:</strong> <span th:text="${reportePreliminar.observaciones}"></span></p>
+      <p><strong>Dictamen:</strong> <span th:text="${reportePreliminar.dictamen}"></span></p>
+      <p><strong>Observaciones del dictamen:</strong> <span th:text="${reportePreliminar.observacionesDictamen}"></span></p>
+
+      <div class="actions">
+        <a class="btn secondary" th:href="@{/reportePreliminar/mostrarReportes}">Regresar</a>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

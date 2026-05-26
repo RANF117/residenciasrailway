@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Estatus de departamentos académicos</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+      <div>
+        <h1>Sistema de Residencias Profesionales</h1>
+        <p>Administración de estatus de departamentos académicos</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+    <main class="main">
+      <div class="card">
+        <h2>Departamentos académicos activos e inactivos</h2>
+
+        <form th:action="@{/departamentoAcademico/estatusDepartamentosAcademicos}" method="get" class="grid" style="margin-bottom: 20px;">
+          <div class="field">
+            <label>Buscar por nombre</label>
+            <input type="text" name="nombre" pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$" 
+            title="Por favor, ingrese solo letras" th:value="${nombre}">
+          </div>
+
+          <div class="actions" style="grid-column:1 / -1;">
+            <button type="submit">Buscar</button>
+            <a class="btn secondary" th:href="@{/departamentoAcademico/estatusDepartamentosAcademicos}">Limpiar</a>
+          </div>
+        </form>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Estatus</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="d : ${departamentoAcademico}">
+              <td th:text="${d.idDepartamentoAcademico}"></td>
+              <td th:text="${d.nombre}"></td>
+              <td>
+                <span th:if="${d.estatus == 1}">Activo</span>
+                <span th:if="${d.estatus == 0}">Inactivo</span>
+              </td>
+              <td>
+                <a class="btn danger"
+                   th:if="${d.estatus == 1}"
+                   th:href="@{/departamentoAcademico/eliminar/{id}(id=${d.idDepartamentoAcademico})}"
+                   onclick="return confirm('¿Desea desactivar este departamento académico?')">
+                  Desactivar
+                </a>
+
+                <a class="btn"
+                   th:if="${d.estatus == 0}"
+                   th:href="@{/departamentoAcademico/activar/{id}(id=${d.idDepartamentoAcademico})}"
+                   onclick="return confirm('¿Desea activar este departamento académico?')">
+                  Activar
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="actions">
+          <a class="btn secondary" th:href="@{/departamentoAcademico/mostrarDepartamentosAcademicos}">Regresar</a>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

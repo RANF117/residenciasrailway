@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de rol</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+  <header class="header">
+    <h1>Sistema de Residencias Profesionales</h1>
+    <p>Registro de roles</p>
+  </header>
+
+  <div class="layout">
+    <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+    <main class="main">
+      <div class="card">
+        <h2>Formulario de rol</h2>
+
+        <form th:action="@{/rol/guardar}" th:object="${rol}" method="post">
+          <input type="hidden" th:field="*{id}">
+          <input type="hidden" th:field="*{estatus}">
+
+          <div class="grid">
+            <div class="field" style="grid-column:1 / -1;">
+              <label>Nombre del rol</label>
+              <input type="text" th:field="*{nombre}" required>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="submit">Guardar</button>
+            <a class="btn secondary" th:href="@{/rol/mostrarRoles}">Cancelar</a>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

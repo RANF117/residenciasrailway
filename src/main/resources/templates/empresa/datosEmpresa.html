@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Empresas</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+      <div>
+        <h1>Sistema de Residencias Profesionales</h1>
+        <p>Catálogo de empresas</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+    <main class="main">
+      <div class="card">
+
+        <div th:if="${msg}" class="alert-success">
+          <span th:text="${msg}"></span>
+        </div>
+
+        <div class="actions">
+          <a class="btn" th:href="@{/empresa/formulario}">
+            <i class="bi bi-plus-circle"></i> Nueva empresa
+          </a>
+
+          <a class="btn light" th:href="@{/empresa/estatusEmpresas}">
+            <i class="bi bi-arrow-repeat"></i> Administrar estatus
+          </a>
+        </div>
+
+        <h2>Empresas activas</h2>
+
+        <form th:action="@{/empresa/mostrarEmpresas}" method="get" class="grid" style="margin-bottom: 20px;">
+          <div class="field">
+            <label>Buscar por nombre</label>
+            <input type="text" name="nombre" pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$" 
+            title="Por favor, ingrese solo letras" th:value="${nombre}">
+          </div>
+
+          <div class="actions" style="grid-column:1 / -1;">
+            <button type="submit">Buscar</button>
+            <a class="btn secondary" th:href="@{/empresa/mostrarEmpresas}">Limpiar</a>
+          </div>
+        </form>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Teléfono</th>
+              <th>Correo</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="e : ${empresa}">
+              <td th:text="${e.idEmpresa}"></td>
+              <td th:text="${e.nombre}"></td>
+              <td th:text="${e.telefono}"></td>
+              <td th:text="${e.correo}"></td>
+              <td>
+                <a class="btn secondary" th:href="@{/empresa/ver/{id}(id=${e.idEmpresa})}">
+                  <i class="bi bi-eye"></i>
+                </a>
+                <a class="btn light" th:href="@{/empresa/editar/{id}(id=${e.idEmpresa})}">
+                  <i class="bi bi-pencil-square"></i>
+                </a>
+                <a class="btn danger" th:href="@{/empresa/eliminar/{id}(id=${e.idEmpresa})}"
+                   onclick="return confirm('¿Desea desactivar esta empresa?')">
+                  <i class="bi bi-trash"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </main>
+  </div>
+</body>
+</html>

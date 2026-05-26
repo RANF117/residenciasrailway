@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Detalle proyecto del banco</title>
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+	<header class="header">
+		<div class="header-content">
+			<img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+			<div>
+				<h1>Sistema de Residencias Profesionales</h1>
+				<p>Detalle del proyecto del banco</p>
+			</div>
+		</div>
+	</header>
+
+	<div class="layout">
+		<aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+		<main class="main">
+			<div class="card">
+				<h2>Detalle del proyecto del banco</h2>
+
+				<p>
+					<strong>ID:</strong> <span
+						th:text="${proyectoBanco.idProyectoBanco}"></span>
+				</p>
+				<p>
+					<strong>Nombre del proyecto:</strong> <span
+						th:text="${proyectoBanco.nombreProyecto}"></span>
+				</p>
+				<p>
+					<strong>Carrera:</strong> <span
+						th:text="${proyectoBanco.carrera != null ? proyectoBanco.carrera.nombre : ''}"></span>
+				</p>
+				<p>
+					<strong>Periodo:</strong> <span th:text="${proyectoBanco.periodo}"></span>
+				</p>
+				<p>
+					<strong>Tipo de proyecto:</strong> <span
+						th:text="${proyectoBanco.tipoProyecto}"></span>
+				</p>
+
+				<p>
+					<strong>Objetivo:</strong> <span
+						th:text="${proyectoBanco.objetivo}"></span>
+				</p>
+				<p>
+					<strong>Descripción:</strong> <span
+						th:text="${proyectoBanco.descripcion}"></span>
+				</p>
+
+				<div class="actions">
+					<a class="btn secondary" sec:authorize="hasRole('JEFE_DIVISION')"
+						th:href="@{/proyectoBanco/mostrarProyectosBanco}"> Regresar </a> 
+						
+						<a
+						class="btn secondary" sec:authorize="hasRole('RESIDENTE')"
+						th:href="@{/proyectoBanco/residente}"> Regresar </a>
+				</div>
+
+			</div>
+		</main>
+	</div>
+</body>
+</html>

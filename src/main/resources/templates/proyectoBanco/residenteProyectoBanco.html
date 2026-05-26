@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Banco de proyectos</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="header-content">
+    <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+    <div>
+      <h1>Sistema de Residencias Profesionales</h1>
+      <p>Banco de proyectos disponibles</p>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+  <main class="main">
+    <div class="card">
+      <h2>Banco de proyectos</h2>
+
+      <form th:action="@{/proyectoBanco/residente}" method="get">
+        <div class="grid">
+          <div class="field">
+            <label for="nombreProyecto">Nombre del proyecto</label>
+            <input type="text" id="nombreProyecto" name="nombreProyecto" th:value="${nombreProyecto}">
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit">Buscar</button>
+          <a class="btn secondary" th:href="@{/proyectoBanco/residente}">Limpiar</a>
+        </div>
+      </form>
+
+      <div th:if="${proyectosBanco == null or #lists.isEmpty(proyectosBanco)}" class="alert-danger">
+        No se encontraron proyectos disponibles.
+      </div>
+
+      <table th:if="${proyectosBanco != null and !#lists.isEmpty(proyectosBanco)}">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre del proyecto</th>
+            <th>Periodo</th>
+            <th>Carrera</th>
+            <th>Operación</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="p : ${proyectosBanco}">
+            <td th:text="${p.idProyectoBanco}"></td>
+            <td th:text="${p.nombreProyecto}"></td>
+            <td th:text="${p.periodo}"></td>
+            <td>
+              <span th:if="${p.carrera != null}" th:text="${p.carrera.nombre}"></span>
+              <span th:if="${p.carrera == null}">Sin carrera</span>
+            </td>
+            <td>
+              <a class="btn secondary" th:href="@{/proyectoBanco/ver/{id}(id=${p.idProyectoBanco})}">
+                <i class="bi bi-eye"></i> Ver detalle
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

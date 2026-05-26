@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Estatus asesores externos</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+      <div>
+        <h1>Sistema de Residencias Profesionales</h1>
+        <p>Administración de estatus de asesores externos</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+    <main class="main">
+      <div class="card">
+        <h2>Asesores externos activos e inactivos</h2>
+
+        <form th:action="@{/asesorExterno/estatusAsesoresExternos}" method="get" class="grid" style="margin-bottom: 20px;">
+          <div class="field">
+            <label>Buscar por nombre</label>
+            <input type="text"
+                   name="nombre"
+                   pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$"
+                   title="Por favor, ingrese solo letras"
+                   th:value="${nombre}">
+          </div>
+
+          <div class="actions" style="grid-column:1 / -1;">
+            <button type="submit">Buscar</button>
+            <a class="btn secondary" th:href="@{/asesorExterno/estatusAsesoresExternos}">Limpiar</a>
+          </div>
+        </form>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Teléfono</th>
+              <th>Puesto</th>
+              <th>Empresa</th>
+              <th>Estatus</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr th:each="a : ${asesorExterno}">
+              <td th:text="${a.idAsesorExterno}"></td>
+
+              <td th:text="${a.nombre}"></td>
+
+              <td th:text="${a.correo}"></td>
+
+              <td th:text="${a.telefono}"></td>
+
+              <td th:text="${a.puesto}"></td>
+
+              <td th:text="${a.empresa != null ? a.empresa.nombre : 'Sin empresa'}"></td>
+
+              <td>
+                <span th:if="${a.estatus == 1}">Activo</span>
+                <span th:if="${a.estatus == 0}">Inactivo</span>
+              </td>
+
+              <td>
+                <a class="btn danger"
+                   th:if="${a.estatus == 1}"
+                   th:href="@{/asesorExterno/eliminar/{id}(id=${a.idAsesorExterno})}">
+                  Desactivar
+                </a>
+
+                <a class="btn"
+                   th:if="${a.estatus == 0}"
+                   th:href="@{/asesorExterno/activar/{id}(id=${a.idAsesorExterno})}">
+                  Activar
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="actions">
+          <a class="btn secondary" th:href="@{/asesorExterno/mostrarAsesoresExternos}">Regresar</a>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

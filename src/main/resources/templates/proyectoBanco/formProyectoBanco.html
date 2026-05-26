@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario de proyecto del banco</title>
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+	<header class="header">
+		<div class="header-content">
+			<img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+			<div>
+				<h1>Sistema de Residencias Profesionales</h1>
+				<p>Registro de proyecto del banco</p>
+			</div>
+		</div>
+	</header>
+
+	<div class="layout">
+		<aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+		<main class="main">
+			<div class="card">
+				<h2>Formulario de proyecto del banco</h2>
+
+				<p class="nota-obligatoria">
+					Los campos marcados con <span class="obligatorio">*</span> son
+					obligatorios.
+				</p>
+
+				<form th:action="@{/proyectoBanco/guardar}"
+					th:object="${proyectoBanco}" method="post" id="formProyectoBanco">
+					<input type="hidden" th:field="*{idProyectoBanco}"> <input
+						type="hidden" th:field="*{estatus}">
+
+					<div class="grid">
+						<div class="field">
+							<label for="nombreProyecto"> Nombre del proyecto <span
+								class="obligatorio">*</span>
+							</label> <input type="text" id="nombreProyecto"
+								th:field="*{nombreProyecto}"> <small
+								class="error-message" id="errorNombreProyecto"></small>
+						</div>
+
+						<div class="field">
+							<label for="carrera"> Carrera <span class="obligatorio">*</span>
+							</label> <select id="carrera" th:field="*{carrera.idCarrera}">
+								<option value="">Seleccione una carrera</option>
+								<option th:each="c : ${carreras}" th:value="${c.idCarrera}"
+									th:text="${c.nombre}"></option>
+							</select> <small class="error-message" id="errorCarrera"></small>
+						</div>
+
+						<div class="field">
+							<label for="periodo"> Periodo <span class="obligatorio">*</span>
+							</label> <select id="periodo" th:field="*{periodo}">
+								<option value="">Seleccione un periodo</option>
+							</select> <small class="error-message" id="errorPeriodo"></small>
+						</div>
+
+						<div class="field">
+							<label for="tipoProyecto"> Tipo de proyecto <span
+								class="obligatorio">*</span>
+							</label> <input type="text" id="tipoProyecto" th:field="*{tipoProyecto}">
+							<small class="error-message" id="errorTipoProyecto"></small>
+						</div>
+
+
+
+						<div class="field" style="grid-column: 1/-1;">
+							<label for="objetivo"> Objetivo <span class="obligatorio">*</span>
+							</label>
+							<textarea id="objetivo" th:field="*{objetivo}" rows="4"></textarea>
+							<small class="error-message" id="errorObjetivo"></small>
+						</div>
+
+						<div class="field" style="grid-column: 1/-1;">
+							<label for="descripcion"> Descripción <span
+								class="obligatorio">*</span>
+							</label>
+							<textarea id="descripcion" th:field="*{descripcion}" rows="4"></textarea>
+							<small class="error-message" id="errorDescripcion"></small>
+						</div>
+					</div>
+
+					<div class="actions">
+						<button type="submit">Guardar</button>
+						<a class="btn secondary"
+							th:href="@{/proyectoBanco/mostrarProyectosBanco}">Cancelar</a>
+					</div>
+				</form>
+			</div>
+		</main>
+	</div>
+
+	<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("formProyectoBanco");
+
+      const nombreProyecto = document.getElementById("nombreProyecto");
+      const carrera = document.getElementById("carrera");
+      const periodo = document.getElementById("periodo");
+      const tipoProyecto = document.getElementById("tipoProyecto");
+      const cupo = document.getElementById("cupo");
+      const objetivo = document.getElementById("objetivo");
+      const descripcion = document.getElementById("descripcion");
+
+      const errorNombreProyecto = document.getElementById("errorNombreProyecto");
+      const errorCarrera = document.getElementById("errorCarrera");
+      const errorPeriodo = document.getElementById("errorPeriodo");
+      const errorTipoProyecto = document.getElementById("errorTipoProyecto");
+      const errorCupo = document.getElementById("errorCupo");
+      const errorObjetivo = document.getElementById("errorObjetivo");
+      const errorDescripcion = document.getElementById("errorDescripcion");
+
+      function validarTexto(input, error, mensaje) {
+        const valor = input.value.trim();
+
+        if (valor === "") {
+          error.textContent = mensaje;
+          input.classList.add("error");
+          return false;
+        }
+
+        error.textContent = "";
+        input.classList.remove("error");
+        return true;
+      }
+
+      function validarCupo() {
+        const valor = cupo.value.trim();
+
+        if (valor === "") {
+          errorCupo.textContent = "El cupo es obligatorio";
+          cupo.classList.add("error");
+          return false;
+        }
+
+        if (!/^[0-9]+$/.test(valor)) {
+          errorCupo.textContent = "El cupo solo debe contener números";
+          cupo.classList.add("error");
+          return false;
+        }
+
+        errorCupo.textContent = "";
+        cupo.classList.remove("error");
+        return true;
+      }
+
+      function validarCarrera() {
+        if (carrera.value === "") {
+          errorCarrera.textContent = "Debe seleccionar una carrera";
+          carrera.classList.add("error");
+          return false;
+        }
+
+        errorCarrera.textContent = "";
+        carrera.classList.remove("error");
+        return true;
+      }
+
+      function validarPeriodo() {
+        if (periodo.value === "") {
+          errorPeriodo.textContent = "Debe seleccionar un periodo";
+          periodo.classList.add("error");
+          return false;
+        }
+
+        errorPeriodo.textContent = "";
+        periodo.classList.remove("error");
+        return true;
+      }
+
+      form.addEventListener("submit", function (e) {
+        const ok1 = validarTexto(nombreProyecto, errorNombreProyecto, "El nombre del proyecto es obligatorio");
+        const ok2 = validarCarrera();
+        const ok3 = validarPeriodo();
+        const ok4 = validarTexto(tipoProyecto, errorTipoProyecto, "El tipo de proyecto es obligatorio");
+        const ok5 = validarCupo();
+        const ok6 = validarTexto(objetivo, errorObjetivo, "El objetivo es obligatorio");
+        const ok7 = validarTexto(descripcion, errorDescripcion, "La descripción es obligatoria");
+
+        if (!ok1 || !ok2 || !ok3 || !ok4 || !ok5 || !ok6 || !ok7) {
+          e.preventDefault();
+        }
+      });
+    });
+    
+    
+    
+    
+  </script>
+  <!-- Funcion para obtener los semestres con el año :) -->
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+  const selectPeriodo = document.getElementById("periodo");
+  const valorActual = selectPeriodo.getAttribute("data-valor-actual") || selectPeriodo.value;
+  const hoy = new Date();
+  const anio = hoy.getFullYear();
+  const mes = hoy.getMonth() + 1;
+
+  let periodos = [];
+
+  if (mes >= 1 && mes <= 6) {
+    periodos = [
+      `ENERO-JUNIO ${anio}`,
+      `AGOSTO-DICIEMBRE ${anio}`,
+      `ENERO-JUNIO ${anio + 1}`
+    ];
+  } else {
+    periodos = [
+      `AGOSTO-DICIEMBRE ${anio}`,
+      `ENERO-JUNIO ${anio + 1}`,
+      `AGOSTO-DICIEMBRE ${anio + 1}`
+    ];
+  }
+
+  if (valorActual && !periodos.includes(valorActual)) {
+    periodos.unshift(valorActual);
+  }
+
+  selectPeriodo.innerHTML = '<option value="">Seleccione un periodo</option>';
+
+  periodos.forEach(periodo => {
+    const option = document.createElement("option");
+    option.value = periodo;
+    option.textContent = periodo;
+
+    if (periodo === valorActual) {
+      option.selected = true;
+    }
+
+    selectPeriodo.appendChild(option);
+  });
+});
+</script>
+</body>
+</html>

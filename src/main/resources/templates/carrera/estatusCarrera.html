@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Estatus de carreras</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+      <div>
+        <h1>Sistema de Residencias Profesionales</h1>
+        <p>Administración de estatus de carreras</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+    <main class="main">
+      <div class="card">
+        <h2>Carreras activas e inactivas</h2>
+
+        <form th:action="@{/carrera/estatusCarreras}" method="get" class="grid" style="margin-bottom: 20px;">
+          <div class="field">
+            <label>Buscar por nombre</label>
+            <input type="text" name="nombre" pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$" 
+            title="Por favor, ingrese solo letras" th:value="${nombre}">
+          </div>
+
+          <div class="actions" style="grid-column:1 / -1;">
+            <button type="submit">Buscar</button>
+            <a class="btn secondary" th:href="@{/carrera/estatusCarreras}">Limpiar</a>
+          </div>
+        </form>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Clave</th>
+              <th>Estatus</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="c : ${carrera}">
+              <td th:text="${c.idCarrera}"></td>
+              <td th:text="${c.nombre}"></td>
+              <td th:text="${c.clave}"></td>
+              <td>
+                <span th:if="${c.estatus == 1}">Activo</span>
+                <span th:if="${c.estatus == 0}">Inactivo</span>
+              </td>
+              <td>
+                <a class="btn danger"
+                   th:if="${c.estatus == 1}"
+                   th:href="@{/carrera/eliminar/{id}(id=${c.idCarrera})}"
+                   onclick="return confirm('¿Desea desactivar esta carrera?')">
+                  Desactivar
+                </a>
+
+                <a class="btn"
+                   th:if="${c.estatus == 0}"
+                   th:href="@{/carrera/activar/{id}(id=${c.idCarrera})}"
+                   onclick="return confirm('¿Desea activar esta carrera?')">
+                  Activar
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="actions">
+          <a class="btn secondary" th:href="@{/carrera/mostrarCarreras}">Regresar</a>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

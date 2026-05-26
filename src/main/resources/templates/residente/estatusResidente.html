@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Estatus residentes</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+      <div>
+        <h1>Sistema de Residencias Profesionales</h1>
+        <p>Administración de estatus de residentes</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+    <main class="main">
+      <div class="card">
+        <h2>Residentes activos e inactivos</h2>
+
+        <form th:action="@{/residente/estatusResidentes}" method="get" class="grid" style="margin-bottom: 20px;">
+          <div class="field">
+            <label>Buscar por nombre</label>
+            <input type="text" name="nombre" pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$" 
+            title="Por favor, ingrese solo letras" th:value="${nombre}">
+          </div>
+
+          <div class="actions" style="grid-column:1 / -1;">
+            <button type="submit">Buscar</button>
+            <a class="btn secondary" th:href="@{/residente/estatusResidentes}">Limpiar</a>
+          </div>
+        </form>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>No. Control</th>
+              <th>Estatus</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="r : ${residente}">
+              <td th:text="${r.idResidente}"></td>
+              <td th:text="${r.nombre + ' ' + r.apellidoPaterno + ' ' + r.apellidoMaterno}"></td>
+              <td th:text="${r.numeroControl}"></td>
+              <td>
+                <span th:if="${r.estatus == 1}">Activo</span>
+                <span th:if="${r.estatus == 0}">Inactivo</span>
+              </td>
+              <td>
+                <a class="btn danger"
+                   th:if="${r.estatus == 1}"
+                   th:href="@{/residente/eliminar/{id}(id=${r.idResidente})}">
+                  Desactivar
+                </a>
+
+                <a class="btn"
+                   th:if="${r.estatus == 0}"
+                   th:href="@{/residente/activar/{id}(id=${r.idResidente})}">
+                  Activar
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="actions">
+          <a class="btn secondary" th:href="@{/residente/mostrarResidentes}">Regresar</a>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

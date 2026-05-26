@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Evaluación de reporte final</title>
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+	<header class="header">
+		<div class="header-content">
+			<img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+			<div>
+				<h1>Sistema de Residencias Profesionales</h1>
+				<p>Evaluación del reporte final</p>
+			</div>
+		</div>
+	</header>
+
+	<div class="layout">
+		<aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+		<main class="main">
+			<div class="card">
+				<div th:if="${msg}" class="alert-success">
+					<span th:text="${msg}"></span>
+				</div>
+
+				<div class="actions">
+					<a class="btn"
+						sec:authorize="hasAnyRole('ASESOR_INTERNO','ASESOR_EXTERNO')"
+						th:href="@{/evaluacionReporteFinal/formulario}"> <i
+						class="bi bi-plus-circle"></i> Nueva evaluación
+					</a> <a class="btn light" th:href="@{/evaluacionReporteFinal/estatus}">
+						<i class="bi bi-arrow-repeat"></i> Administrar estatus
+					</a>
+				</div>
+
+				<h2>Evaluaciones activas del reporte final</h2>
+
+				<form th:action="@{/evaluacionReporteFinal/mostrar}" method="get"
+					class="grid" style="margin-bottom: 20px;">
+					<div class="field">
+						<label>Buscar por proyecto</label> <input type="text"
+							name="nombreProyecto" th:value="${nombreProyecto}">
+					</div>
+					<div class="actions" style="grid-column: 1/-1;">
+						<button type="submit">Buscar</button>
+						<a class="btn secondary"
+							th:href="@{/evaluacionReporteFinal/mostrar}">Limpiar</a>
+					</div>
+				</form>
+
+				<table>
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Proyecto</th>
+							<th>Fecha</th>
+							<th>Promedio reporte final</th>
+							<th>Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="e : ${evaluacionReporteFinal}">
+							<td th:text="${e.idEvaluacionReporteFinal}"></td>
+							<td
+								th:text="${e.proyectoResidencia != null ? e.proyectoResidencia.nombreProyecto : ''}"></td>
+							<td
+								th:text="${e.fechaEvaluacion != null ? #dates.format(e.fechaEvaluacion, 'dd-MM-yyyy') : ''}"></td>
+							<td th:text="${e.calificacionFinalReporte}"></td>
+							<td><a class="btn secondary"
+								th:href="@{/evaluacionReporteFinal/ver/{id}(id=${e.idEvaluacionReporteFinal})}">
+									<i class="bi bi-eye"></i>
+							</a> <a class="btn light"
+								th:href="@{/evaluacionReporteFinal/editar/{id}(id=${e.idEvaluacionReporteFinal})}">
+									<i class="bi bi-pencil-square"></i>
+							</a> <a class="btn danger"
+								th:href="@{/evaluacionReporteFinal/eliminar/{id}(id=${e.idEvaluacionReporteFinal})}"
+								onclick="return confirm('¿Desea desactivar esta evaluación?')">
+									<i class="bi bi-trash"></i>
+							</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</main>
+	</div>
+</body>
+</html>

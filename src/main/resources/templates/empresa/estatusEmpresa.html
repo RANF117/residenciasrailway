@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Estatus de empresas</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+      <div>
+        <h1>Sistema de Residencias Profesionales</h1>
+        <p>Administración de estatus de empresas</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+    <main class="main">
+      <div class="card">
+        <h2>Empresas activas e inactivas</h2>
+
+        <form th:action="@{/empresa/estatusEmpresas}" method="get" class="grid" style="margin-bottom: 20px;">
+          <div class="field">
+            <label>Buscar por nombre</label>
+            <input type="text" name="nombre" th:value="${nombre}">
+          </div>
+
+          <div class="actions" style="grid-column:1 / -1;">
+            <button type="submit">Buscar</button>
+            <a class="btn secondary" th:href="@{/empresa/estatusEmpresas}">Limpiar</a>
+          </div>
+        </form>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Estatus</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="e : ${empresa}">
+              <td th:text="${e.idEmpresa}"></td>
+              <td th:text="${e.nombre}"></td>
+              <td>
+                <span th:if="${e.estatus == 1}">Activo</span>
+                <span th:if="${e.estatus == 0}">Inactivo</span>
+              </td>
+              <td>
+                <a class="btn danger"
+                   th:if="${e.estatus == 1}"
+                   th:href="@{/empresa/eliminar/{id}(id=${e.idEmpresa})}"
+                   onclick="return confirm('¿Desea desactivar esta empresa?')">
+                  Desactivar
+                </a>
+
+                <a class="btn"
+                   th:if="${e.estatus == 0}"
+                   th:href="@{/empresa/activar/{id}(id=${e.idEmpresa})}"
+                   onclick="return confirm('¿Desea activar esta empresa?')">
+                  Activar
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="actions">
+          <a class="btn secondary" th:href="@{/empresa/mostrarEmpresas}">Regresar</a>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

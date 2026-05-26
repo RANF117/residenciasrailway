@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario de propuesta de proyecto</title>
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+	<header class="header">
+		<div class="header-content">
+			<img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+			<div>
+				<h1>Sistema de Residencias Profesionales</h1>
+				<p>Registro de propuesta de proyecto</p>
+			</div>
+		</div>
+	</header>
+
+	<div class="layout">
+		<aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+		<main class="main">
+			<div class="card">
+				<h2>Formulario de propuesta de proyecto</h2>
+
+				<p class="nota-obligatoria">
+					Los campos marcados con <span class="obligatorio">*</span> son
+					obligatorios.
+				</p>
+
+				<form th:action="@{/propuestaProyecto/guardar}"
+					th:object="${propuestaProyecto}" method="post"
+					id="formPropuestaProyecto">
+					<input type="hidden" th:field="*{idPropuestaProyecto}"> <input
+						type="hidden" th:field="*{estatus}"> <input type="hidden"
+						th:field="*{estadoRevision}"> <input type="hidden"
+						th:field="*{observacionesRevision}">
+
+					<div class="grid">
+						<div class="field">
+							<label for="nombreProyecto"> Nombre del proyecto <span
+								class="obligatorio">*</span>
+							</label> <input type="text" id="nombreProyecto"
+								th:field="*{nombreProyecto}"> <small
+								class="error-message" id="errorNombreProyecto"></small>
+						</div>
+
+						<input type="hidden" th:field="*{residente.idResidente}">
+
+						<div class="field">
+							<label>Residente</label> <input type="text"
+								th:value="${nombreResidente}" readonly>
+						</div>
+
+						<div class="field">
+							<label for="empresa"> Empresa <span class="obligatorio">*</span>
+							</label> <select id="empresa" th:field="*{empresa.idEmpresa}">
+								<option value="">Seleccione una empresa</option>
+								<option th:each="e : ${empresas}" th:value="${e.idEmpresa}"
+									th:text="${e.nombre}"></option>
+							</select> <small class="error-message" id="errorEmpresa"></small>
+						</div>
+
+						<div class="field">
+							<label for="periodo"> Periodo <span class="obligatorio">*</span>
+							</label> <select id="periodo" th:field="*{periodo}"
+								th:attr="data-valor-actual=*{periodo}">
+								<option value="">Seleccione un periodo</option>
+							</select> <small class="error-message" id="errorPeriodo"></small>
+						</div>
+
+						<div class="field" style="grid-column: 1/-1;">
+							<label for="objetivo"> Objetivo <span class="obligatorio">*</span>
+							</label>
+							<textarea id="objetivo" th:field="*{objetivo}" rows="4"></textarea>
+							<small class="error-message" id="errorObjetivo"></small>
+						</div>
+
+						<div class="field" style="grid-column: 1/-1;">
+							<label for="descripcion"> Descripción <span
+								class="obligatorio">*</span>
+							</label>
+							<textarea id="descripcion" th:field="*{descripcion}" rows="4"></textarea>
+							<small class="error-message" id="errorDescripcion"></small>
+						</div>
+
+						<div class="field" style="grid-column: 1/-1;">
+							<label for="justificacion"> Justificación <span
+								class="obligatorio">*</span>
+							</label>
+							<textarea id="justificacion" th:field="*{justificacion}" rows="4"></textarea>
+							<small class="error-message" id="errorJustificacion"></small>
+						</div>
+					</div>
+
+					<div class="actions">
+						<button type="submit">Guardar</button>
+						<a class="btn secondary"
+							th:href="@{/propuestaProyecto/mostrarPropuestas}">Cancelar</a>
+					</div>
+				</form>
+			</div>
+		</main>
+	</div>
+
+	<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("formPropuestaProyecto");
+
+      const nombreProyecto = document.getElementById("nombreProyecto");
+
+      const empresa = document.getElementById("empresa");
+      const periodo = document.getElementById("periodo");
+      const objetivo = document.getElementById("objetivo");
+      const descripcion = document.getElementById("descripcion");
+      const justificacion = document.getElementById("justificacion");
+
+      const errorNombreProyecto = document.getElementById("errorNombreProyecto");
+      const errorEmpresa = document.getElementById("errorEmpresa");
+      const errorPeriodo = document.getElementById("errorPeriodo");
+      const errorObjetivo = document.getElementById("errorObjetivo");
+      const errorDescripcion = document.getElementById("errorDescripcion");
+      const errorJustificacion = document.getElementById("errorJustificacion");
+
+      function validarTexto(input, error, mensaje) {
+        const valor = input.value.trim();
+
+        if (valor === "") {
+          error.textContent = mensaje;
+          input.classList.add("error");
+          return false;
+        }
+
+        error.textContent = "";
+        input.classList.remove("error");
+        return true;
+      }
+
+      function validarSelect(input, error, mensaje) {
+        if (input.value === "") {
+          error.textContent = mensaje;
+          input.classList.add("error");
+          return false;
+        }
+
+        error.textContent = "";
+        input.classList.remove("error");
+        return true;
+      }
+
+      nombreProyecto.addEventListener("input", () => validarTexto(nombreProyecto, errorNombreProyecto, "El nombre del proyecto es obligatorio"));
+      empresa.addEventListener("change", () => validarSelect(empresa, errorEmpresa, "Debe seleccionar una empresa"));
+      periodo.addEventListener("change", () => validarSelect(periodo, errorPeriodo, "Debe seleccionar un periodo"));
+      objetivo.addEventListener("input", () => validarTexto(objetivo, errorObjetivo, "El objetivo es obligatorio"));
+      descripcion.addEventListener("input", () => validarTexto(descripcion, errorDescripcion, "La descripción es obligatoria"));
+      justificacion.addEventListener("input", () => validarTexto(justificacion, errorJustificacion, "La justificación es obligatoria"));
+
+      form.addEventListener("submit", function (e) {
+        const ok1 = validarTexto(nombreProyecto, errorNombreProyecto, "El nombre del proyecto es obligatorio");
+        const ok3 = validarSelect(empresa, errorEmpresa, "Debe seleccionar una empresa");
+        const ok4 = validarSelect(periodo, errorPeriodo, "Debe seleccionar un periodo");
+        const ok5 = validarTexto(objetivo, errorObjetivo, "El objetivo es obligatorio");
+        const ok6 = validarTexto(descripcion, errorDescripcion, "La descripción es obligatoria");
+        const ok7 = validarTexto(justificacion, errorJustificacion, "La justificación es obligatoria");
+
+        if (!ok1 || !ok2 || !ok3 || !ok4 || !ok5 || !ok6 || !ok7) {
+          e.preventDefault();
+        }
+      });
+    });
+  </script>
+
+	<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const selectPeriodo = document.getElementById("periodo");
+  const valorActual = selectPeriodo.getAttribute("data-valor-actual") || selectPeriodo.value;
+  const hoy = new Date();
+  const anio = hoy.getFullYear();
+  const mes = hoy.getMonth() + 1;
+
+  let periodos = [];
+
+  if (mes >= 1 && mes <= 6) {
+    periodos = [
+      `ENERO-JUNIO ${anio}`,
+      `AGOSTO-DICIEMBRE ${anio}`,
+      `ENERO-JUNIO ${anio + 1}`
+    ];
+  } else {
+    periodos = [
+      `AGOSTO-DICIEMBRE ${anio}`,
+      `ENERO-JUNIO ${anio + 1}`,
+      `AGOSTO-DICIEMBRE ${anio + 1}`
+    ];
+  }
+
+  if (valorActual && !periodos.includes(valorActual)) {
+    periodos.unshift(valorActual);
+  }
+
+  selectPeriodo.innerHTML = '<option value="">Seleccione un periodo</option>';
+
+  periodos.forEach(periodo => {
+    const option = document.createElement("option");
+    option.value = periodo;
+    option.textContent = periodo;
+
+    if (periodo === valorActual) {
+      option.selected = true;
+    }
+
+    selectPeriodo.appendChild(option);
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulario usuario</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="header">
+  <div class="header-content">
+    <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+    <div>
+      <h1>Sistema de Residencias Profesionales</h1>
+      <p>Formulario de usuario</p>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+  <main class="main">
+    <div class="card">
+      <h2>Formulario de usuario</h2>
+
+      <div th:if="${msgError}" class="alert-danger">
+        <span th:text="${msgError}"></span>
+      </div>
+
+      <form th:action="@{/usuario/guardar}" th:object="${usuario}" method="post">
+        <input type="hidden" th:field="*{id}">
+        <input type="hidden" th:field="*{estatus}">
+
+        <div class="grid">
+          <div class="field">
+            <label>Username</label>
+            <input type="text" th:field="*{username}" required>
+          </div>
+
+          <div class="field">
+            <label>Contraseña</label>
+            <input type="password" th:field="*{password}">
+            <small>Déjela en blanco si no desea cambiarla.</small>
+          </div>
+
+          <div class="field">
+            <label>Rol</label>
+            <select th:field="*{rol.id}" required>
+              <option value="">Seleccione un rol</option>
+
+              <option th:each="r : ${roles}"
+                      th:if="${r.nombre != 'JEFE_DIVISION' or (usuario.id != null and usuario.rol != null and usuario.rol.nombre == 'JEFE_DIVISION') or !existeJefeDivision}"
+                      th:value="${r.id}"
+                      th:text="${r.nombre}">
+              </option>
+            </select>
+            <small th:if="${existeJefeDivision}">
+              El rol JEFE_DIVISION ya está asignado y no se mostrará para nuevos usuarios.
+            </small>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit">Guardar</button>
+          <a class="btn secondary" th:href="@{/usuario/mostrarUsuarios}">Cancelar</a>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+</body>
+</html>

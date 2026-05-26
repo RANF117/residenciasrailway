@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalle empresa</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+      <div>
+        <h1>Sistema de Residencias Profesionales</h1>
+        <p>Detalle de empresa</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+    <main class="main">
+      <div class="card">
+        <h2>Detalle de empresa</h2>
+
+        <p><strong>ID:</strong> <span th:text="${empresa.idEmpresa}"></span></p>
+        <p><strong>Nombre:</strong> <span th:text="${empresa.nombre}"></span></p>
+        <p><strong>Dirección:</strong> <span th:text="${empresa.direccion}"></span></p>
+        <p><strong>Teléfono:</strong> <span th:text="${empresa.telefono}"></span></p>
+        <p><strong>Correo:</strong> <span th:text="${empresa.correo}"></span></p>
+
+        <div class="actions">
+          <a class="btn secondary" th:href="@{/empresa/mostrarEmpresas}">Regresar</a>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

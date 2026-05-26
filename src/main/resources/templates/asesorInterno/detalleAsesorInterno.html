@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalle asesor interno</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+      <div>
+        <h1>Sistema de Residencias Profesionales</h1>
+        <p>Detalle de asesor interno</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+    <main class="main">
+      <div class="card">
+        <h2>Detalle de asesor interno</h2>
+
+        <div style="margin-bottom: 20px;">
+          <img th:if="${asesorInterno.foto == 'noFoto.jpeg'}"
+               th:src="@{/img/noFoto.jpeg}" width="140" style="border-radius: 10px;">
+          <img th:if="${asesorInterno.foto != 'noFoto.jpeg'}"
+               th:src="@{/residencias/asesoresInternos/{img}(img=${asesorInterno.foto})}" width="140" style="border-radius: 10px;">
+        </div>
+
+        <p><strong>ID:</strong> <span th:text="${asesorInterno.idAsesorInterno}"></span></p>
+        <p><strong>Nombre:</strong> <span th:text="${asesorInterno.nombre}"></span></p>
+        <p><strong>Apellido paterno:</strong> <span th:text="${asesorInterno.apellidoPaterno}"></span></p>
+        <p><strong>Apellido materno:</strong> <span th:text="${asesorInterno.apellidoMaterno}"></span></p>
+        <p><strong>Correo:</strong> <span th:text="${asesorInterno.correo}"></span></p>
+        <p><strong>Teléfono:</strong> <span th:text="${asesorInterno.telefono}"></span></p>
+        <p><strong>Departamento:</strong> <span th:text="${asesorInterno.departamentoAcademico != null ? asesorInterno.departamentoAcademico.nombre : ''}"></span></p>
+
+        <div class="actions">
+          <a class="btn secondary" th:href="@{/asesorInterno/mostrarAsesoresInternos}">Regresar</a>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

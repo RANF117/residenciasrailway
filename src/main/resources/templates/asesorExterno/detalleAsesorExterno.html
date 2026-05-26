@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Detalle asesor externo</title>
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+	<header class="header">
+		<div class="header-content">
+			<img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+			<div>
+				<h1>Sistema de Residencias Profesionales</h1>
+				<p>Detalle de asesor externo</p>
+			</div>
+		</div>
+	</header>
+
+	<div class="layout">
+		<aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+		<main class="main">
+			<div class="card">
+				<h2>Detalle de asesor externo</h2>
+
+				<div style="margin-bottom: 20px;">
+					<img class="foto-detalle"
+						th:src="${asesorExterno.foto != null && asesorExterno.foto != 'noFoto.jpeg'}
+          ? @{/residencias/asesoresExternos/{foto}(foto=${asesorExterno.foto})}
+          : @{/img/noFoto.jpeg}"
+						alt="Foto asesor externo">
+				</div>
+
+				<p>
+					<strong>ID:</strong> <span
+						th:text="${asesorExterno.idAsesorExterno}"></span>
+				</p>
+
+				<p>
+					<strong>Nombre:</strong> <span th:text="${asesorExterno.nombre}"></span>
+				</p>
+
+				<p>
+					<strong>Correo:</strong> <span th:text="${asesorExterno.correo}"></span>
+				</p>
+
+				<p>
+					<strong>Teléfono:</strong> <span
+						th:text="${asesorExterno.telefono}"></span>
+				</p>
+
+				<p>
+					<strong>Puesto:</strong> <span th:text="${asesorExterno.puesto}"></span>
+				</p>
+
+				<p>
+					<strong>Empresa:</strong> <span
+						th:text="${asesorExterno.empresa != null ? asesorExterno.empresa.nombre : ''}"></span>
+				</p>
+
+				<div class="actions">
+					<a class="btn secondary"
+						th:href="@{/asesorExterno/mostrarAsesoresExternos}"> Regresar
+					</a>
+				</div>
+			</div>
+		</main>
+	</div>
+</body>
+</html>

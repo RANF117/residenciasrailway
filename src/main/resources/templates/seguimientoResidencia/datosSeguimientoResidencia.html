@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Seguimientos de residencia</title>
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+	<header class="header">
+		<div class="header-content">
+			<img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+			<div>
+				<h1>Sistema de Residencias Profesionales</h1>
+				<p>Seguimiento de residencia</p>
+			</div>
+		</div>
+	</header>
+
+	<div class="layout">
+		<aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+		<main class="main">
+			<div class="card">
+				<div th:if="${msg}" class="alert-success">
+					<span th:text="${msg}"></span>
+				</div>
+
+				<div class="actions">
+					<a class="btn"
+						sec:authorize="hasAnyRole('ASESOR_INTERNO','ASESOR_EXTERNO')"
+						th:href="@{/seguimientoResidencia/formulario}"> <i
+						class="bi bi-plus-circle"></i> Nuevo seguimiento
+					</a> <a class="btn light"
+						th:href="@{/seguimientoResidencia/estatusSeguimientos}"> <i
+						class="bi bi-arrow-repeat"></i> Administrar estatus
+					</a>
+				</div>
+
+				<h2>Seguimientos activos</h2>
+
+				<form th:action="@{/seguimientoResidencia/mostrarSeguimientos}"
+					method="get" class="grid" style="margin-bottom: 20px;">
+					<div class="field">
+						<label>Filtrar por tipo</label> <select name="tipoSeguimiento">
+							<option value="">Todos</option>
+							<option value="PRIMER_SEGUIMIENTO"
+								th:selected="${tipoSeguimiento == 'PRIMER_SEGUIMIENTO'}">PRIMER_SEGUIMIENTO</option>
+							<option value="SEGUNDO_SEGUIMIENTO"
+								th:selected="${tipoSeguimiento == 'SEGUNDO_SEGUIMIENTO'}">SEGUNDO_SEGUIMIENTO</option>
+						</select>
+					</div>
+
+					<div class="actions" style="grid-column: 1/-1;">
+						<button type="submit">Buscar</button>
+						<a class="btn secondary"
+							th:href="@{/seguimientoResidencia/mostrarSeguimientos}">Limpiar</a>
+					</div>
+				</form>
+
+				<table>
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Proyecto</th>
+							<th>Tipo</th>
+							<th>Fecha</th>
+							<th>Calificación final</th>
+							<th>Acciones</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="s : ${seguimientoResidencia}">
+							<td th:text="${s.idSeguimientoResidencia}"></td>
+							<td
+								th:text="${s.proyectoResidencia != null ? s.proyectoResidencia.nombreProyecto : ''}"></td>
+							<td th:text="${s.tipoSeguimiento}"></td>
+							<td th:text="${#dates.format(s.fechaEvaluacion, 'dd-MM-yyyy')}"></td>
+							<td th:text="${s.calificacionFinal}"></td>
+							<td><a class="btn secondary"
+								th:href="@{/seguimientoResidencia/ver/{id}(id=${s.idSeguimientoResidencia})}">
+									<i class="bi bi-eye"></i>
+							</a> <a class="btn light"
+								th:href="@{/seguimientoResidencia/editar/{id}(id=${s.idSeguimientoResidencia})}">
+									<i class="bi bi-pencil-square"></i>
+							</a> <a class="btn danger"
+								th:href="@{/seguimientoResidencia/eliminar/{id}(id=${s.idSeguimientoResidencia})}"
+								onclick="return confirm('¿Desea desactivar este seguimiento?')">
+									<i class="bi bi-trash"></i>
+							</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</main>
+	</div>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalle seguimiento</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="header">
+  <div class="header-content">
+    <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+    <div>
+      <h1>Sistema de Residencias Profesionales</h1>
+      <p>Detalle del seguimiento de residencia</p>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+  <main class="main">
+    <div class="card">
+      <h2>Detalle del seguimiento</h2>
+
+      <p><strong>ID:</strong> <span th:text="${seguimientoResidencia.idSeguimientoResidencia}"></span></p>
+      <p><strong>Proyecto:</strong> <span th:text="${seguimientoResidencia.proyectoResidencia != null ? seguimientoResidencia.proyectoResidencia.nombreProyecto : ''}"></span></p>
+      <p><strong>Tipo de seguimiento:</strong> <span th:text="${seguimientoResidencia.tipoSeguimiento}"></span></p>
+      <p><strong>Fecha de evaluación:</strong> <span th:text="${#dates.format(seguimientoResidencia.fechaEvaluacion, 'dd-MM-yyyy')}"></span></p>
+      <p><strong>Calificación asesor interno:</strong> <span th:text="${seguimientoResidencia.calificacionAsesorInterno}"></span></p>
+      <p><strong>Calificación asesor externo:</strong> <span th:text="${seguimientoResidencia.calificacionAsesorExterno}"></span></p>
+      <p><strong>Calificación final:</strong> <span th:text="${seguimientoResidencia.calificacionFinal}"></span></p>
+      <p><strong>Observaciones:</strong> <span th:text="${seguimientoResidencia.observaciones}"></span></p>
+
+      <div class="actions">
+        <a class="btn secondary" th:href="@{/seguimientoResidencia/mostrarSeguimientos}">Regresar</a>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Estatus reportes preliminares</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="header">
+  <div class="header-content">
+    <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+    <div>
+      <h1>Sistema de Residencias Profesionales</h1>
+      <p>Administración de estatus de reportes preliminares</p>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+  <main class="main">
+    <div class="card">
+      <h2>Reportes activos e inactivos</h2>
+
+      <form th:action="@{/reportePreliminar/estatusReportes}" method="get" class="grid" style="margin-bottom:20px;">
+        <div class="field">
+          <label>Buscar por proyecto</label>
+          <input type="text" name="nombreProyecto" th:value="${nombreProyecto}">
+        </div>
+
+        <div class="field">
+          <label>Filtrar por dictamen</label>
+          <select name="dictamen">
+            <option value="">Todos</option>
+            <option value="PENDIENTE" th:selected="${dictamen == 'PENDIENTE'}">PENDIENTE</option>
+            <option value="APROBADO" th:selected="${dictamen == 'APROBADO'}">APROBADO</option>
+            <option value="CONDICIONADO" th:selected="${dictamen == 'CONDICIONADO'}">CONDICIONADO</option>
+            <option value="RECHAZADO" th:selected="${dictamen == 'RECHAZADO'}">RECHAZADO</option>
+          </select>
+        </div>
+
+        <div class="actions" style="grid-column:1 / -1;">
+          <button type="submit">Buscar</button>
+          <a class="btn secondary" th:href="@{/reportePreliminar/estatusReportes}">Limpiar</a>
+        </div>
+      </form>
+
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Proyecto</th>
+            <th>Dictamen</th>
+            <th>Estatus</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="r : ${reportePreliminar}">
+            <td th:text="${r.idReportePreliminar}"></td>
+            <td th:text="${r.proyectoResidencia != null ? r.proyectoResidencia.nombreProyecto : ''}"></td>
+            <td th:text="${r.dictamen}"></td>
+            <td>
+              <span th:if="${r.estatus == 1}">Activo</span>
+              <span th:if="${r.estatus == 0}">Inactivo</span>
+            </td>
+            <td>
+              <a class="btn danger" th:if="${r.estatus == 1}" th:href="@{/reportePreliminar/eliminar/{id}(id=${r.idReportePreliminar})}">
+                Desactivar
+              </a>
+              <a class="btn" th:if="${r.estatus == 0}" th:href="@{/reportePreliminar/activar/{id}(id=${r.idReportePreliminar})}">
+                Activar
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="actions">
+        <a class="btn secondary" th:href="@{/reportePreliminar/mostrarReportes}">Regresar</a>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

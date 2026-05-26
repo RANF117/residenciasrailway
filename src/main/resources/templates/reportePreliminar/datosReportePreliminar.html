@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Reportes preliminares</title>
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+	<header class="header">
+		<div class="header-content">
+			<img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+			<div>
+				<h1>Sistema de Residencias Profesionales</h1>
+				<p>Reportes preliminares</p>
+			</div>
+		</div>
+	</header>
+
+	<div class="layout">
+		<aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+		<main class="main">
+			<div class="card">
+				<div th:if="${msg}" class="alert-success">
+					<span th:text="${msg}"></span>
+				</div>
+
+				<div class="actions">
+					<a class="btn"
+					   sec:authorize="hasRole('RESIDENTE')"
+					   th:href="@{/reportePreliminar/formulario}">
+						<i class="bi bi-plus-circle"></i> Nuevo reporte preliminar
+					</a>
+
+					<a class="btn light"
+					   sec:authorize="hasRole('JEFE_DIVISION')"
+					   th:href="@{/reportePreliminar/revisar}">
+						<i class="bi bi-clipboard-check"></i> Revisar reportes
+					</a>
+
+					<a class="btn light"
+					   sec:authorize="hasRole('JEFE_DIVISION')"
+					   th:href="@{/reportePreliminar/estatusReportes}">
+						<i class="bi bi-arrow-repeat"></i> Administrar estatus
+					</a>
+				</div>
+
+				<h2>Reportes preliminares activos</h2>
+
+				<form th:action="@{/reportePreliminar/mostrarReportes}" method="get"
+					class="grid" style="margin-bottom: 20px;">
+
+					<div class="field">
+						<label>Buscar por proyecto</label>
+						<input type="text" name="nombreProyecto" th:value="${nombreProyecto}">
+					</div>
+
+					<div class="field" sec:authorize="hasRole('JEFE_DIVISION')">
+						<label>Filtrar por dictamen</label>
+						<select name="dictamen">
+							<option value="">Todos</option>
+							<option value="PENDIENTE"
+								th:selected="${dictamen == 'PENDIENTE'}">PENDIENTE</option>
+							<option value="APROBADO"
+								th:selected="${dictamen == 'APROBADO'}">APROBADO</option>
+							<option value="CONDICIONADO"
+								th:selected="${dictamen == 'CONDICIONADO'}">CONDICIONADO</option>
+							<option value="RECHAZADO"
+								th:selected="${dictamen == 'RECHAZADO'}">RECHAZADO</option>
+						</select>
+					</div>
+
+					<div class="actions" style="grid-column: 1/-1;">
+						<button type="submit">Buscar</button>
+						<a class="btn secondary"
+							th:href="@{/reportePreliminar/mostrarReportes}">Limpiar</a>
+					</div>
+				</form>
+
+				<table>
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Proyecto</th>
+							<th>Fecha</th>
+							<th>Dictamen</th>
+							<th>Acciones</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr th:each="r : ${reportePreliminar}">
+							<td th:text="${r.idReportePreliminar}"></td>
+
+							<td th:text="${r.proyectoResidencia != null ? r.proyectoResidencia.nombreProyecto : 'Sin proyecto asignado'}"></td>
+
+							<td th:text="${r.fechaEntrega != null ? #dates.format(r.fechaEntrega, 'dd-MM-yyyy') : 'Sin fecha'}"></td>
+
+							<td th:text="${r.dictamen}"></td>
+
+							<td>
+								<a class="btn secondary"
+								   th:href="@{/reportePreliminar/ver/{id}(id=${r.idReportePreliminar})}">
+									<i class="bi bi-eye"></i>
+								</a>
+
+								<a class="btn light"
+								   sec:authorize="hasRole('RESIDENTE')"
+								   th:href="@{/reportePreliminar/editar/{id}(id=${r.idReportePreliminar})}">
+									<i class="bi bi-pencil-square"></i>
+								</a>
+
+								<a class="btn"
+								   th:href="@{/reportePreliminar/pdf/{id}(id=${r.idReportePreliminar})}"
+								   target="_blank">
+									<i class="bi bi-file-earmark-pdf"></i>
+								</a>
+
+								<a class="btn danger"
+								   sec:authorize="hasRole('RESIDENTE')"
+								   th:href="@{/reportePreliminar/eliminar/{id}(id=${r.idReportePreliminar})}"
+								   onclick="return confirm('¿Desea desactivar este reporte preliminar?')">
+									<i class="bi bi-trash"></i>
+								</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+			</div>
+		</main>
+	</div>
+</body>
+</html>

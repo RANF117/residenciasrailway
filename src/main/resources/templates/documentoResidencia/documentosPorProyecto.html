@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Expediente del residente</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body>
+<header class="header">
+  <div class="header-content">
+    <img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+    <div>
+      <h1>Sistema de Residencias Profesionales</h1>
+      <p>Expediente del residente</p>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+  <main class="main">
+    <div class="card">
+      <h2>Expediente documental del proyecto</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Tipo de documento</th>
+            <th>Estado</th>
+            <th>Archivo</th>
+            <th>Fecha</th>
+            <th>Observaciones</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="item : ${expediente}">
+            <td th:text="${item.tipoDocumento}"></td>
+            <td th:text="${item.estado}"></td>
+
+            <td>
+              <a class="btn secondary"
+                 th:if="${item.documento != null and item.documento.rutaArchivo != null and !#strings.isEmpty(item.documento.rutaArchivo)}"
+                 th:href="@{/documentoResidencia/archivo/{id}(id=${item.documento.idDocumentoResidencia})}"
+                 target="_blank">
+                <i class="bi bi-file-earmark-pdf"></i> Ver PDF
+              </a>
+
+              <span th:if="${item.documento == null or item.documento.rutaArchivo == null or #strings.isEmpty(item.documento.rutaArchivo)}">
+                Sin documento
+              </span>
+            </td>
+
+            <td th:text="${item.documento != null and item.documento.fechaCarga != null ? #dates.format(item.documento.fechaCarga, 'dd-MM-yyyy') : ''}"></td>
+
+            <td th:text="${item.documento != null ? item.documento.observaciones : 'Sin observaciones'}"></td>
+
+            <td>
+              <a class="btn secondary"
+                 th:if="${item.documento != null}"
+                 th:href="@{/documentoResidencia/ver/{id}(id=${item.documento.idDocumentoResidencia})}">
+                <i class="bi bi-eye"></i>
+              </a>
+
+              <a class="btn light"
+                 th:if="${item.documento != null}"
+                 th:href="@{/documentoResidencia/editar/{id}(id=${item.documento.idDocumentoResidencia})}">
+                <i class="bi bi-pencil-square"></i>
+              </a>
+
+              <a class="btn"
+                 th:if="${item.documento == null}"
+                 th:href="@{/documentoResidencia/formulario}">
+                Subir
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="actions">
+        <a class="btn secondary"
+           th:if="${volver == 'seguimiento'}"
+           th:href="@{/seguimientoResidencia/formulario(
+              idProyectoResidencia=${idProyectoResidencia},
+              tipoSeguimiento=${tipoSeguimiento}
+           )}">
+          Regresar Seguimientos
+        </a>
+
+        <a class="btn secondary"
+           th:if="${volver != 'seguimiento'}"
+           th:href="@{/proyectoResidencia/mostrarProyectosResidencia}">
+          Regresar Proyectos residencia
+        </a>
+      </div>
+    </div>
+  </main>
+</div>
+</body>
+</html>

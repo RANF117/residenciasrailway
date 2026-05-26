@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario de proyecto de residencia</title>
+<link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+	<header class="header">
+		<div class="header-content">
+			<img th:src="@{/img/logoTec.jpeg}" alt="Logo Tec" class="logo-header">
+			<div>
+				<h1>Sistema de Residencias Profesionales</h1>
+				<p>Formalización de proyecto de residencia</p>
+			</div>
+		</div>
+	</header>
+
+	<div class="layout">
+		<aside th:replace="~{fragmento/fragment :: aside}"></aside>
+
+		<main class="main">
+			<div class="card">
+				<h2>Formulario de proyecto de residencia</h2>
+
+				<p class="nota-obligatoria">
+					Los campos marcados con <span class="obligatorio">*</span> son
+					obligatorios.
+				</p>
+				<div th:if="${error}" class="alert-danger">
+					<span th:text="${error}"></span>
+				</div>
+
+				<div th:if="${msg}" class="alert-success">
+					<span th:text="${msg}"></span>
+				</div>
+
+				<form th:action="@{/proyectoResidencia/guardar}"
+					th:object="${proyectoResidencia}" method="post"
+					id="formProyectoResidencia">
+					<input type="hidden" th:field="*{idProyectoResidencia}"> <input
+						type="hidden" th:field="*{estatus}"> <input type="hidden"
+						th:field="*{horas}">
+
+					<div class="grid">
+
+						<div class="field">
+							<label for="origenProyecto"> Origen del proyecto <span
+								class="obligatorio">*</span>
+							</label> <select id="origenProyecto" th:field="*{origenProyecto}">
+								<option value="">Seleccione un origen</option>
+								<option value="BANCO">BANCO</option>
+								<option value="PROPUESTA">PROPUESTA</option>
+							</select> <small class="error-message" id="errorOrigenProyecto"></small>
+						</div>
+
+						<div class="field" id="contenedorProyectoBanco">
+							<label for="proyectoBanco"> Proyecto del banco <span
+								class="obligatorio">*</span>
+							</label> <select id="proyectoBanco"
+								th:field="*{proyectoBanco.idProyectoBanco}">
+								<option value="">Seleccione un proyecto</option>
+								<option th:each="p : ${proyectosBanco}"
+									th:value="${p.idProyectoBanco}" th:text="${p.nombreProyecto}"
+									th:data-nombre="${p.nombreProyecto}"
+									th:data-objetivo="${p.objetivo}"
+									th:data-descripcion="${p.descripcion}"
+									th:data-periodo="${p.periodo}"></option>
+							</select> <small class="error-message" id="errorProyectoBanco"></small>
+						</div>
+
+						<div class="field" id="contenedorPropuestaProyecto">
+							<label for="propuestaProyecto"> Propuesta aprobada <span
+								class="obligatorio">*</span>
+							</label> <select id="propuestaProyecto"
+								th:field="*{propuestaProyecto.idPropuestaProyecto}">
+								<option value="">Seleccione una propuesta</option>
+								<option th:each="p : ${propuestasProyecto}"
+									th:if="${p.estadoRevision == 'APROBADA'}"
+									th:value="${p.idPropuestaProyecto}"
+									th:text="${p.nombreProyecto}"
+									th:data-nombre="${p.nombreProyecto}"
+									th:data-objetivo="${p.objetivo}"
+									th:data-descripcion="${p.descripcion}"
+									th:data-periodo="${p.periodo}"
+									th:data-residenteid="${p.residente != null ? p.residente.idResidente : ''}"
+									th:data-residentenombre="${p.residente != null ? p.residente.nombre + ' ' + p.residente.apellidoPaterno : ''}"
+									th:data-empresaid="${p.empresa != null ? p.empresa.idEmpresa : ''}"
+									th:data-empresanombre="${p.empresa != null ? p.empresa.nombre : ''}">
+								</option>
+							</select> <small class="error-message" id="errorPropuestaProyecto"></small>
+						</div>
+
+						<div class="field" style="grid-column: 1/-1;">
+							<label for="nombreProyecto"> Nombre del proyecto <span
+								class="obligatorio">*</span>
+							</label> <input type="text" id="nombreProyecto"
+								th:field="*{nombreProyecto}" readonly> <small
+								class="error-message" id="errorNombreProyecto"></small>
+						</div>
+
+						<div class="field" style="grid-column: 1/-1;">
+							<label for="objetivo"> Objetivo <span class="obligatorio">*</span>
+							</label>
+							<textarea id="objetivo" th:field="*{objetivo}" rows="4" readonly></textarea>
+							<small class="error-message" id="errorObjetivo"></small>
+						</div>
+
+						<div class="field" style="grid-column: 1/-1;">
+							<label for="descripcion"> Descripción <span
+								class="obligatorio">*</span>
+							</label>
+							<textarea id="descripcion" th:field="*{descripcion}" rows="4"
+								readonly></textarea>
+							<small class="error-message" id="errorDescripcion"></small>
+						</div>
+
+						<div class="field">
+							<label for="periodo"> Periodo <span class="obligatorio">*</span>
+							</label> <input type="text" id="periodo" th:field="*{periodo}" readonly>
+							<small class="error-message" id="errorPeriodo"></small>
+						</div>
+
+						<div class="field">
+							<label for="horasVisible">Horas</label> <input type="text"
+								id="horasVisible" value="500" readonly>
+						</div>
+
+						<div class="field">
+							<label for="residente"> Residente <span
+								class="obligatorio">*</span>
+							</label> <select id="residente" th:field="*{residente.idResidente}">
+								<option value="">Seleccione un residente</option>
+								<option th:each="r : ${residentes}" th:value="${r.idResidente}"
+									th:text="${r.nombre + ' ' + r.apellidoPaterno}"></option>
+							</select> <small class="error-message" id="errorResidente"></small>
+						</div>
+
+						<div class="field">
+							<label for="empresa"> Empresa <span class="obligatorio">*</span>
+							</label> <select id="empresa" th:field="*{empresa.idEmpresa}">
+								<option value="">Seleccione una empresa</option>
+								<option th:each="e : ${empresas}" th:value="${e.idEmpresa}"
+									th:text="${e.nombre}"></option>
+							</select> <small class="error-message" id="errorEmpresa"></small>
+						</div>
+
+						<div class="field">
+							<label for="asesorInterno"> Asesor interno <span
+								class="obligatorio">*</span>
+							</label> <select id="asesorInterno"
+								th:field="*{asesorInterno.idAsesorInterno}">
+								<option value="">Seleccione un asesor interno</option>
+								<option th:each="a : ${asesoresInternos}"
+									th:value="${a.idAsesorInterno}"
+									th:text="${a.nombre + ' ' + a.apellidoPaterno}"></option>
+							</select> <small class="error-message" id="errorAsesorInterno"></small>
+						</div>
+
+						<div class="field">
+							<label for="asesorExterno"> Asesor externo <span
+								class="obligatorio">*</span>
+							</label> <select id="asesorExterno"
+								th:field="*{asesorExterno.idAsesorExterno}">
+								<option value="">Seleccione primero una empresa</option>
+								<option th:each="a : ${asesoresExternos}"
+									th:value="${a.idAsesorExterno}"
+									th:text="${a.nombre + ' ' + a.apellidoPaterno}"
+									th:data-empresaid="${a.empresa != null ? a.empresa.idEmpresa : ''}">
+								</option>
+							</select> <small class="error-message" id="errorAsesorExterno"></small>
+						</div>
+
+						<div class="field">
+							<label for="fechaInicio"> Fecha de inicio <span
+								class="obligatorio">*</span>
+							</label> <input type="date" id="fechaInicio" th:field="*{fechaInicio}">
+							<small class="error-message" id="errorFechaInicio"></small>
+						</div>
+
+						<div class="field">
+							<label for="fechaFin"> Fecha de fin <span
+								class="obligatorio">*</span>
+							</label> <input type="date" id="fechaFin" th:field="*{fechaFin}" readonly>
+							<small class="error-message" id="errorFechaFin"></small>
+						</div>
+
+						<div class="field">
+							<label for="etapaActual"> Etapa actual <span
+								class="obligatorio">*</span>
+							</label> <select id="etapaActual" th:field="*{etapaActual}">
+								<option value="">Seleccione una etapa</option>
+								<option value="ACTIVO">ACTIVO</option>
+								<option value="EN_SEGUIMIENTO">EN SEGUIMIENTO</option>
+								<option value="CONCLUIDO">CONCLUIDO</option>
+							</select> <small class="error-message" id="errorEtapaActual"></small>
+						</div>
+
+					</div>
+
+					<div class="actions">
+						<button type="submit">Guardar</button>
+						<a class="btn secondary"
+							th:href="@{/proyectoResidencia/mostrarProyectosResidencia}">Cancelar</a>
+					</div>
+				</form>
+			</div>
+		</main>
+	</div>
+
+	<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("formProyectoResidencia");
+
+      const origenProyecto = document.getElementById("origenProyecto");
+      const proyectoBanco = document.getElementById("proyectoBanco");
+      const propuestaProyecto = document.getElementById("propuestaProyecto");
+
+      const nombreProyecto = document.getElementById("nombreProyecto");
+      const objetivo = document.getElementById("objetivo");
+      const descripcion = document.getElementById("descripcion");
+      const periodo = document.getElementById("periodo");
+
+      const residente = document.getElementById("residente");
+      const empresa = document.getElementById("empresa");
+      const asesorInterno = document.getElementById("asesorInterno");
+      const asesorExterno = document.getElementById("asesorExterno");
+      const fechaInicio = document.getElementById("fechaInicio");
+      const fechaFin = document.getElementById("fechaFin");
+      const etapaActual = document.getElementById("etapaActual");
+
+      const contenedorProyectoBanco = document.getElementById("contenedorProyectoBanco");
+      const contenedorPropuestaProyecto = document.getElementById("contenedorPropuestaProyecto");
+
+      const errorOrigenProyecto = document.getElementById("errorOrigenProyecto");
+      const errorProyectoBanco = document.getElementById("errorProyectoBanco");
+      const errorPropuestaProyecto = document.getElementById("errorPropuestaProyecto");
+      const errorNombreProyecto = document.getElementById("errorNombreProyecto");
+      const errorObjetivo = document.getElementById("errorObjetivo");
+      const errorDescripcion = document.getElementById("errorDescripcion");
+      const errorPeriodo = document.getElementById("errorPeriodo");
+      const errorResidente = document.getElementById("errorResidente");
+      const errorEmpresa = document.getElementById("errorEmpresa");
+      const errorAsesorInterno = document.getElementById("errorAsesorInterno");
+      const errorAsesorExterno = document.getElementById("errorAsesorExterno");
+      const errorFechaInicio = document.getElementById("errorFechaInicio");
+      const errorFechaFin = document.getElementById("errorFechaFin");
+      const errorEtapaActual = document.getElementById("errorEtapaActual");
+
+      function actualizarVisibilidadOrigen() {
+        if (origenProyecto.value === "BANCO") {
+          contenedorProyectoBanco.style.display = "block";
+          contenedorPropuestaProyecto.style.display = "none";
+          propuestaProyecto.value = "";
+        } else if (origenProyecto.value === "PROPUESTA") {
+          contenedorProyectoBanco.style.display = "none";
+          contenedorPropuestaProyecto.style.display = "block";
+          proyectoBanco.value = "";
+        } else {
+          contenedorProyectoBanco.style.display = "none";
+          contenedorPropuestaProyecto.style.display = "none";
+          proyectoBanco.value = "";
+          propuestaProyecto.value = "";
+        }
+      }
+
+      function llenarDesdeBanco() {
+        const option = proyectoBanco.options[proyectoBanco.selectedIndex];
+
+        if (proyectoBanco.value !== "") {
+          nombreProyecto.value = option.dataset.nombre || "";
+          objetivo.value = option.dataset.objetivo || "";
+          descripcion.value = option.dataset.descripcion || "";
+          periodo.value = option.dataset.periodo || "";
+        }
+      }
+
+      function llenarDesdePropuesta() {
+        const option = propuestaProyecto.options[propuestaProyecto.selectedIndex];
+
+        if (propuestaProyecto.value !== "") {
+          nombreProyecto.value = option.dataset.nombre || "";
+          objetivo.value = option.dataset.objetivo || "";
+          descripcion.value = option.dataset.descripcion || "";
+          periodo.value = option.dataset.periodo || "";
+
+          if (option.dataset.residenteid) {
+            residente.value = option.dataset.residenteid;
+          }
+
+          if (option.dataset.empresaid) {
+            empresa.value = option.dataset.empresaid;
+            filtrarAsesoresExternosPorEmpresa();
+          }
+        }
+      }
+
+      function validarSelect(input, error, mensaje) {
+        if (input.value === "") {
+          error.textContent = mensaje;
+          input.classList.add("error");
+          return false;
+        }
+
+        error.textContent = "";
+        input.classList.remove("error");
+        return true;
+      }
+
+      function validarTexto(input, error, mensaje) {
+        if (input.value.trim() === "") {
+          error.textContent = mensaje;
+          input.classList.add("error");
+          return false;
+        }
+
+        error.textContent = "";
+        input.classList.remove("error");
+        return true;
+      }
+
+      function filtrarAsesoresExternosPorEmpresa() {
+        const empresaId = empresa.value;
+        const valorActual = asesorExterno.value;
+        let asesorActualValido = false;
+        let cantidadAsesores = 0;
+
+        Array.from(asesorExterno.options).forEach(function (option) {
+          if (option.value === "") {
+            option.hidden = false;
+            option.disabled = false;
+            return;
+          }
+
+          const empresaDelAsesor = option.dataset.empresaid;
+
+          if (empresaId !== "" && empresaDelAsesor === empresaId) {
+            option.hidden = false;
+            option.disabled = false;
+            cantidadAsesores++;
+
+            if (option.value === valorActual) {
+              asesorActualValido = true;
+            }
+          } else {
+            option.hidden = true;
+            option.disabled = true;
+          }
+        });
+
+        if (empresaId === "") {
+          asesorExterno.value = "";
+          asesorExterno.options[0].textContent = "Seleccione primero una empresa";
+          return;
+        }
+
+        if (cantidadAsesores === 0) {
+          asesorExterno.value = "";
+          asesorExterno.options[0].textContent = "No hay asesores externos para esta empresa";
+          return;
+        }
+
+        asesorExterno.options[0].textContent = "Seleccione un asesor externo";
+
+        if (!asesorActualValido) {
+          asesorExterno.value = "";
+        }
+
+        errorAsesorExterno.textContent = "";
+        asesorExterno.classList.remove("error");
+      }
+
+      function validarAsesorExterno() {
+        if (empresa.value === "") {
+          errorAsesorExterno.textContent = "Primero debe seleccionar una empresa";
+          asesorExterno.classList.add("error");
+          return false;
+        }
+
+        if (asesorExterno.value === "") {
+          errorAsesorExterno.textContent = "Debe seleccionar un asesor externo";
+          asesorExterno.classList.add("error");
+          return false;
+        }
+
+        const option = asesorExterno.options[asesorExterno.selectedIndex];
+
+        if (option.dataset.empresaid !== empresa.value) {
+          errorAsesorExterno.textContent = "El asesor externo no pertenece a la empresa seleccionada";
+          asesorExterno.classList.add("error");
+          return false;
+        }
+
+        errorAsesorExterno.textContent = "";
+        asesorExterno.classList.remove("error");
+        return true;
+      }
+
+      function formatearFecha(fecha) {
+        const anio = fecha.getFullYear();
+        const mes = String(fecha.getMonth() + 1).padStart(2, "0");
+        const dia = String(fecha.getDate()).padStart(2, "0");
+
+        return `${anio}-${mes}-${dia}`;
+      }
+
+      function calcularFechaFin() {
+        if (fechaInicio.value === "") {
+          fechaFin.value = "";
+          return;
+        }
+
+        const partes = fechaInicio.value.split("-");
+        const anio = Number(partes[0]);
+        const mes = Number(partes[1]) - 1;
+        const dia = Number(partes[2]);
+
+        const fechaCalculada = new Date(anio, mes, dia);
+
+        fechaCalculada.setDate(fechaCalculada.getDate() + 112);
+
+        fechaFin.value = formatearFecha(fechaCalculada);
+
+        errorFechaInicio.textContent = "";
+        fechaInicio.classList.remove("error");
+
+        errorFechaFin.textContent = "";
+        fechaFin.classList.remove("error");
+      }
+
+      function validarFechas() {
+        if (fechaInicio.value === "") {
+          errorFechaInicio.textContent = "La fecha de inicio es obligatoria";
+          fechaInicio.classList.add("error");
+          return false;
+        } else {
+          errorFechaInicio.textContent = "";
+          fechaInicio.classList.remove("error");
+        }
+
+        if (fechaFin.value === "") {
+          errorFechaFin.textContent = "La fecha de fin es obligatoria";
+          fechaFin.classList.add("error");
+          return false;
+        }
+
+        const inicio = new Date(fechaInicio.value + "T00:00:00");
+        const fin = new Date(fechaFin.value + "T00:00:00");
+
+        if (fin <= inicio) {
+          errorFechaFin.textContent = "La fecha de fin debe ser posterior a la fecha de inicio";
+          fechaFin.classList.add("error");
+          return false;
+        }
+
+        const diferenciaMs = fin - inicio;
+        const dias = diferenciaMs / (1000 * 60 * 60 * 24);
+
+        if (dias !== 112) {
+          errorFechaFin.textContent = "La residencia debe durar exactamente 16 semanas (112 días)";
+          fechaFin.classList.add("error");
+          return false;
+        }
+
+        errorFechaFin.textContent = "";
+        fechaFin.classList.remove("error");
+        return true;
+      }
+
+      origenProyecto.addEventListener("change", function () {
+        actualizarVisibilidadOrigen();
+
+        nombreProyecto.value = "";
+        objetivo.value = "";
+        descripcion.value = "";
+        periodo.value = "";
+
+        validarSelect(origenProyecto, errorOrigenProyecto, "Debe seleccionar el origen del proyecto");
+      });
+
+      proyectoBanco.addEventListener("change", function () {
+        llenarDesdeBanco();
+        validarSelect(proyectoBanco, errorProyectoBanco, "Debe seleccionar un proyecto del banco");
+      });
+
+      propuestaProyecto.addEventListener("change", function () {
+        llenarDesdePropuesta();
+        validarSelect(propuestaProyecto, errorPropuestaProyecto, "Debe seleccionar una propuesta aprobada");
+      });
+
+      residente.addEventListener("change", function () {
+        validarSelect(residente, errorResidente, "Debe seleccionar un residente");
+      });
+
+      empresa.addEventListener("change", function () {
+        filtrarAsesoresExternosPorEmpresa();
+        validarSelect(empresa, errorEmpresa, "Debe seleccionar una empresa");
+      });
+
+      asesorInterno.addEventListener("change", function () {
+        validarSelect(asesorInterno, errorAsesorInterno, "Debe seleccionar un asesor interno");
+      });
+
+      asesorExterno.addEventListener("change", validarAsesorExterno);
+
+      etapaActual.addEventListener("change", function () {
+        validarSelect(etapaActual, errorEtapaActual, "Debe seleccionar una etapa");
+      });
+
+      fechaInicio.addEventListener("input", calcularFechaFin);
+      fechaInicio.addEventListener("change", calcularFechaFin);
+
+      if (fechaInicio.value !== "" && fechaFin.value === "") {
+        calcularFechaFin();
+      }
+
+      actualizarVisibilidadOrigen();
+      filtrarAsesoresExternosPorEmpresa();
+
+      form.addEventListener("submit", function (e) {
+        calcularFechaFin();
+
+        const okOrigen = validarSelect(origenProyecto, errorOrigenProyecto, "Debe seleccionar el origen del proyecto");
+
+        let okProyecto = true;
+
+        if (origenProyecto.value === "BANCO") {
+          okProyecto = validarSelect(proyectoBanco, errorProyectoBanco, "Debe seleccionar un proyecto del banco");
+        }
+
+        if (origenProyecto.value === "PROPUESTA") {
+          okProyecto = validarSelect(propuestaProyecto, errorPropuestaProyecto, "Debe seleccionar una propuesta aprobada");
+        }
+
+        const okNombre = validarTexto(nombreProyecto, errorNombreProyecto, "El nombre del proyecto es obligatorio");
+        const okObjetivo = validarTexto(objetivo, errorObjetivo, "El objetivo es obligatorio");
+        const okDescripcion = validarTexto(descripcion, errorDescripcion, "La descripción es obligatoria");
+        const okPeriodo = validarTexto(periodo, errorPeriodo, "El periodo es obligatorio");
+
+        const okResidente = validarSelect(residente, errorResidente, "Debe seleccionar un residente");
+        const okEmpresa = validarSelect(empresa, errorEmpresa, "Debe seleccionar una empresa");
+        const okAsesorInterno = validarSelect(asesorInterno, errorAsesorInterno, "Debe seleccionar un asesor interno");
+        const okAsesorExterno = validarAsesorExterno();
+        const okEtapa = validarSelect(etapaActual, errorEtapaActual, "Debe seleccionar una etapa");
+
+        const okFechas = validarFechas();
+
+        if (!okOrigen || !okProyecto || !okNombre || !okObjetivo || !okDescripcion || !okPeriodo ||
+            !okResidente || !okEmpresa || !okAsesorInterno || !okAsesorExterno || !okEtapa || !okFechas) {
+          e.preventDefault();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
